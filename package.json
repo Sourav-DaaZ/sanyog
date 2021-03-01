@@ -10,7 +10,6 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@ant-design/react-native": "^4.0.7",
     "@react-native-community/masked-view": "^0.1.10",
     "axios": "^0.21.1",
     "native-base": "^2.15.2",
@@ -26,9 +25,7 @@
     "react-native-screens": "^2.18.0",
     "react-native-vector-icons": "^8.1.0",
     "react-native-webview": "^11.2.3",
-    "react-redux": "^7.2.2",
-    "redux": "^4.0.5",
-    "redux-thunk": "^2.3.0"
+    "react-redux": "^7.2.2"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
