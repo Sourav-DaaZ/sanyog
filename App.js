@@ -5,31 +5,31 @@
  * @format
  * @flow strict-local
  */
-
+import 'react-native-gesture-handler';
 import React from 'react';
-import {SafeAreaView,Text} from 'react-native';
-import { Provider } from "react-redux";
-import { createStore, applyMiddleware, combineReducers } from "redux";
-import thunk from "redux-thunk";
+import {Text} from 'react-native-paper';
+import {Provider} from 'react-redux';
+import {createStore, applyMiddleware, combineReducers} from 'redux';
+import thunk from 'redux-thunk';
 
 import authReducer from './src/store/reducers/auth';
+import RootStackScreen from './src/routes';
+import GlobalTheme from './src/contextProviders/globalThemeProvider';
 
 const rootReducer = combineReducers({
   auth: authReducer,
 });
 
-const store = createStore(
-rootReducer, 
-applyMiddleware(thunk)
-);
+const store = createStore(rootReducer, applyMiddleware(thunk));
 
 const App = () => {
   return (
     <Provider store={store}>
-        <SafeAreaView><Text>Setup Done</Text></SafeAreaView>
+      <GlobalTheme dark={false}>
+          <RootStackScreen />
+      </GlobalTheme>
     </Provider>
   );
 };
-
 
 export default App;

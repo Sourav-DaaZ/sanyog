@@ -93,7 +93,7 @@ package-lock.json
 /packages/react-native-codegen/**/*.xcodeproj
 
 # CocoaPods
-ios/Pods/
+Pods/
 ios/Podfile.lock
 /packages/rn-tester/Gemfile.lock
 
