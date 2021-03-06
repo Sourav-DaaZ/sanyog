@@ -15,6 +15,12 @@ import thunk from 'redux-thunk';
 import authReducer from './src/store/reducers/auth';
 import RootStackScreen from './src/routes';
 import GlobalTheme from './src/contextProviders/globalThemeProvider';
+import {API} from './src/constants/apiConstant';
+
+if (API.currentEnv !== 'prod') {
+  GLOBAL.XMLHttpRequest =
+    GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest;
+}
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -26,7 +32,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <GlobalTheme dark={false}>
-          <RootStackScreen />
+        <RootStackScreen />
       </GlobalTheme>
     </Provider>
   );

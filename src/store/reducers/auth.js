@@ -1,4 +1,5 @@
 import * as actionTypes from '../actions/actionTypes';
+import { updateObject } from '../../utils';
 
 const initialState = {
     token: null,
@@ -11,7 +12,8 @@ const initialState = {
 const loading= (state, action) => {
     return updateObject( state, {
         loading: action.loading
-    });
+    }
+    );
 }
 
 const reducer = ( state = initialState, action ) => {

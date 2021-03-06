@@ -1,5 +1,10 @@
 import * as actionTypes from './actionTypes';
 
+export const authStart = () => {
+    return {
+        type: actionTypes.AUTH_START
+    };
+};
 
 export const loading = (load) => {
     return {
@@ -7,3 +12,4 @@ export const loading = (load) => {
         loading: load
     };
 };
+
