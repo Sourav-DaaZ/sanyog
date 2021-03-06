@@ -1,4 +1,4 @@
-import axiosObj from '../../services/axiosConfig';
+import axiosObj from './axiosConfig';
 
 export const loginFunction = (data) => {
     let url = "/login";
