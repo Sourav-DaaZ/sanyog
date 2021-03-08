@@ -22,7 +22,7 @@ const SplashScreen = ({navigation}) => {
           resizeMode="stretch"
         />
       }>
-      <Text style={styles.title}>Stay connected wich everyone!</Text>
+      <Text style={styles.title}>Stay connected with everyone!</Text>
       <Text style={styles.text}>Sign in with account</Text>
       <View style={styles.button}>
         <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>

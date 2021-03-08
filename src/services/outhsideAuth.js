@@ -9,8 +9,8 @@ const formDataHeaders = {
   "Content-Type": "multipart/form-data",
 };
 
-export const loginFunction = (data) => {
-  return axiosObj({
+export const loginApi = async(data) => {
+  return await axiosObj({
     url: API.noAuthUrls.loginUser,
     method: 'POST',
     headers: {...defaultHeaders},

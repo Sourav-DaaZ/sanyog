@@ -10,7 +10,6 @@ const axiosObj = (info) => {
 
       AxiosInstance.interceptors.request.use(
         (config) => {
-            console.log(config)
           return config;
         },
         (error) => {
@@ -22,7 +21,13 @@ const axiosObj = (info) => {
           return response.data;
         },
         (error) => {
-           return Promise.reject(error.response?error.response.request?error.response.request._response:error.response.data:error);
+          if(error.response && error.response.data && error.response.data.message){
+            return Promise.reject(error.response.data.message);
+          }else if(error.response && error.response.request && error.response.request._response){
+            return Promise.reject(error.response.request._response);
+          }else{
+            return Promise.reject(error);
+          }
         }
       );
       return AxiosInstance({ url, method, headers, data });

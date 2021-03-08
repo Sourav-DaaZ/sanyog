@@ -1,42 +1,9 @@
-import {Dimensions, StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 import { Platform } from 'react-native';
 
-const {height} = Dimensions.get('screen');
-const height_logo = height * 0.28;
 
-export const spleshStyle = StyleSheet.create({
-  logo: {
-    width: height_logo,
-    height: height_logo,
-  },
-  title: {
-    color: '#05375a',
-    fontSize: 30,
-    fontWeight: 'bold',
-  },
-  text: {
-    color: 'gray',
-    marginTop: 5,
-  },
-  button: {
-    alignItems: 'flex-end',
-    marginTop: 30,
-  },
-  signIn: {
-    width: 150,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 50,
-    flexDirection: 'row',
-  },
-  textSign: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
-});
 
-export const loginStyle = StyleSheet.create({
+export const styles = StyleSheet.create({
   title: {
     color: '#05375a',
     fontSize: 30,
