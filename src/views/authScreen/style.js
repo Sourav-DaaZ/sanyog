@@ -36,7 +36,30 @@ export const spleshStyle = StyleSheet.create({
   },
 });
 
+
 export const loginStyle = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#009387',
+  },
+  header: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    paddingHorizontal: 20,
+    paddingBottom: 50,
+  },
+  footer: {
+    flex: 3,
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    paddingVertical: 50,
+    paddingHorizontal: 30,
+  },
+  logo: {
+    width: height_logo,
+    height: height_logo,
+  },
   title: {
     color: '#05375a',
     fontSize: 30,
@@ -64,7 +87,7 @@ export const loginStyle = StyleSheet.create({
     marginTop: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#f2f2f2',
-    paddingBottom: 0,
+    paddingBottom: 5,
   },
   textInput: {
     flex: 1,

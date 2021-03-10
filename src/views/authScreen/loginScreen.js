@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, TouchableOpacity, Keyboard} from 'react-native';
+import {View, TouchableOpacity, Keyboard, Alert} from 'react-native';
 import {Text} from 'react-native-paper';
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -9,9 +9,10 @@ import {loginStyle as styles} from './style';
 import CommonInput from '../../sharedComponents/commonInput';
 import {updateObject, validate} from '../../utils';
 import Toast from 'react-native-simple-toast';
-import {loginApi} from '../../services/outhsideAuth';
+import OutsideAuthApi from '../../services/outSideAuth';
 
 const LoginScreen = ({navigation}) => {
+  const formElementsArray = [];
   const [data, setData] = React.useState({
     controls: {
       email: {
@@ -21,12 +22,12 @@ const LoginScreen = ({navigation}) => {
           text: 'Email',
           placeholder: 'Enter your email',
         },
-        value: '',
+        value: 'souravdas.oo1@gmail.com',
         validation: {
           required: true,
           isEmail: true,
         },
-        valid: false,
+        valid: true,
         errors: '',
         className: [],
         icons: [
@@ -41,14 +42,14 @@ const LoginScreen = ({navigation}) => {
           text: 'Password',
           placeholder: 'Enter yourpassword',
         },
-        value: '',
+        value: 'Password@123',
         validation: {
           required: true,
           isEmail: true,
         },
         errors: '',
-        valid: false,
-        className: [{marginTop: 35}],
+        valid: true,
+        className: [],
         icons: [
           <FontAwesome name="lock" color="#05375a" size={20} />,
           <Feather name={'eye-off'} color="gray" size={20} />,
@@ -103,6 +104,13 @@ const LoginScreen = ({navigation}) => {
     setData(varVal);
   };
 
+  for (let key in data.controls) {
+    formElementsArray.push({
+      id: key,
+      config: data.controls[key],
+    });
+  }
+
   const onSubmit = () => {
     let isValid = [];
     let val = {};
@@ -113,47 +121,48 @@ const LoginScreen = ({navigation}) => {
     if (isValid.includes(false)) {
       Toast.show('please validate all the fields.');
     } else {
-      loginApi(val)
-        .then((response) => {
-          console.log(response.data);
+      OutsideAuthApi()
+        .loginApi(val)
+        .then((res) => {
+          // Alert.alert(res);
           navigation.navigate('RegisterScreen');
         })
-        .catch((err) => {
-          console.log(err);
-          Toast.show(err);
-        });
+        .catch((err) => Alert.alert(err));
     }
   };
 
-  const formElementsArray = [];
-
-  for (let key in data.controls) {
-    formElementsArray.push({
-      id: key,
-      config: data.controls[key],
-    });
-  }
-
   return (
     <LoginLayout headerText="Welcome">
-      {formElementsArray.map((x, index) => (
-        <CommonInput
-          key={index}
-          headerText={x.config.elementConfig.text}
-          placeholder={x.config.elementConfig.placeholder}
-          onInputChange={onInputChange}
-          onSubmit={() => Keyboard.dismiss()}
-          value={x.config.value}
-          type={x.config.elementConfig.type}
-          isValid={x.config.valid}
-          validation={x.config.validation}
-          className={x.config.className}
-          icons={x.config.icons}
-          ele={x.config.elementType}
-          errors={x.config.errors}
-        />
-      ))}
-
+      <Text style={styles.text_footer}>Email</Text>
+      <CommonInput
+        placeholder={data.controls.email.elementConfig.placeholder}
+        onInputChange={onInputChange}
+        onSubmit={() => Keyboard.dismiss()}
+        value={data.controls.email.value}
+        type={data.controls.email.elementConfig.type}
+        isValid={data.controls.email.valid}
+        validation={data.controls.email.validation}
+        icons={data.controls.email.icons}
+        ele={data.controls.email.elementType}
+      />
+      {data.controls.email.errors ? (
+        <Text style={{color: 'red'}}>{data.controls.email.errors}</Text>
+      ) : null}
+      <Text style={[styles.text_footer, {marginTop: 35}]}>Password</Text>
+      <CommonInput
+        placeholder={data.controls.password.elementConfig.placeholder}
+        onInputChange={onInputChange}
+        onSubmit={() => Keyboard.dismiss()}
+        value={data.controls.password.value}
+        type={data.controls.password.elementConfig.type}
+        isValid={data.controls.password.valid}
+        validation={data.controls.password.validation}
+        icons={data.controls.password.icons}
+        ele={data.controls.password.elementType}
+      />
+      {data.controls.password.errors ? (
+        <Text style={{color: 'red'}}>{data.controls.password.errors}</Text>
+      ) : null}
       <View style={styles.button}>
         <TouchableOpacity onPress={onSubmit} style={styles.signIn}>
           <LinearGradient colors={['#08d464', '#01ab9d']} style={styles.signIn}>

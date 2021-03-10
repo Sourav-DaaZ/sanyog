@@ -9,7 +9,7 @@ import {loginStyle as styles} from './style';
 import CommonInput from '../../sharedComponents/commonInput';
 import {updateObject, validate} from '../../utils';
 import Toast from 'react-native-simple-toast';
-import { loginApi } from '../../services/outhsideAuth';
+import { loginApi } from '../../services/outSideAuth';
 
 const RegisterScreen = ({navigation}) => {
   const [data, setData] = React.useState({

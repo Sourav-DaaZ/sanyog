@@ -11,25 +11,27 @@ const axiosObj = (info) => {
       AxiosInstance.interceptors.request.use(
         (config) => {
           return config;
-        },
-        (error) => {
-          Promise.reject(error);
+        },(e) => {
+          Promise.reject(e);
         }
       );
+      
       AxiosInstance.interceptors.response.use(
         (response) => {
           return response.data;
         },
         (error) => {
-          if(error.response && error.response.data && error.response.data.message){
-            return Promise.reject(error.response.data.message);
-          }else if(error.response && error.response.request && error.response.request._response){
-            return Promise.reject(error.response.request._response);
-          }else{
+          console.log(error);
+          // if(error.response && error.response.data && error.response.data.message){
+          //   return Promise.reject(error.response.data.message);
+          // }else if(error.response && error.response.request && error.response.request._response){
+          //   return Promise.reject(error.response.request._response);
+          // }else{
             return Promise.reject(error);
-          }
-        }
-      );
+          // }
+          // return Promise.reject('something wents wrong');
+        });
+
       return AxiosInstance({ url, method, headers, data });
 }
 

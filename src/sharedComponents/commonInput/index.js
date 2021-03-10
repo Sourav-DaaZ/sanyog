@@ -1,6 +1,5 @@
 import React from 'react';
 import {View, TextInput} from 'react-native';
-import {Text} from 'react-native-paper';
 import Feather from 'react-native-vector-icons/Feather';
 import {styles} from './style';
 
@@ -9,8 +8,7 @@ const CommonInput = (props) => {
   let inputElement = null;
   switch (props.ele) {
     case 'input':
-      inputElement = (
-        <View
+      inputElement = <View
           style={props.style ? [styles.action, props.style[1]] : styles.action}>
           {/* <FontAwesome name="user-o" color="#05375a" size={20} /> */}
           {props.icons ? props.icons[0] : null}
@@ -27,12 +25,10 @@ const CommonInput = (props) => {
             autoCapitalize="none"
           />
           {props.isValid ? (props.icons ? props.icons[1] : null) : null}
-        </View>
-      );
+        </View>;
       break;
     case 'password':
-      inputElement = (
-        <View
+      inputElement = <View
           style={props.style ? [styles.action, props.style[1]] : styles.action}>
           {props.icons ? props.icons[0] : null}
           <TextInput
@@ -54,23 +50,11 @@ const CommonInput = (props) => {
             size={20}
             onPress={() => setDot(!dot)}
           />
-        </View>
-      );
+        </View>;
       break;
   }
   return (
-    <>
-      <Text
-        style={
-          props.className
-            ? [styles.text_footer, props.className[0]]
-            : styles.text_footer
-        }>
-        {props.headerText}
-      </Text>
-      {inputElement}
-      {props.errors ? <Text style={{color: 'red'}}>{props.errors}</Text> : null}
-    </>
+      inputElement
   );
 };
 
