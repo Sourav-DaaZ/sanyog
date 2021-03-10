@@ -14,6 +14,7 @@ import DeviceInfo from 'react-native-device-info';
 import * as actions from '../../store/actions';
 import {connect} from 'react-redux';
 import validation from '../../constants/validationMsg';
+import ButtonLayout from '../../sharedComponents/button';
 
 let deviceId = DeviceInfo.getUniqueId();
 
@@ -131,7 +132,7 @@ const LoginScreen = (props) => {
         .loginApi(val)
         .then((res) => {
           props.loader(false);
-          displayResponse(res,true);
+          displayResponse(res, true);
           props.navigation.navigate('RegisterScreen');
         })
         .catch((err) => {
@@ -174,21 +175,14 @@ const LoginScreen = (props) => {
         <Text style={{color: 'red'}}>{data.controls.password.errors}</Text>
       ) : null}
       <View style={styles.button}>
-        <TouchableOpacity onPress={onSubmit} style={styles.signIn}>
-          <LinearGradient colors={['#08d464', '#01ab9d']} style={styles.signIn}>
-            <Text style={[styles.textSign, {color: 'white'}]}>Login</Text>
-          </LinearGradient>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.signIn,
-            {borderColor: '#009387', borderWidth: 1, marginTop: 15},
-          ]}
+        <ButtonLayout onPress={onSubmit} buttonTxt="Login" />
+        <ButtonLayout
           onPress={() => {
-            navigation.navigate('RegisterScreen');
-          }}>
-          <Text style={[styles.textSign, {color: '#009387'}]}>Sign in</Text>
-        </TouchableOpacity>
+            props.navigation.navigate('RegisterScreen');
+          }}
+          buttonTxt="Sign in"
+          outline
+        />
       </View>
     </LoginLayout>
   );
