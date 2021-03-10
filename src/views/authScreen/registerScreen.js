@@ -8,7 +8,6 @@ import LoginLayout from '../../sharedComponents/layout/loginLayout';
 import {loginStyle as styles} from './style';
 import CommonInput from '../../sharedComponents/commonInput';
 import {updateObject, validate} from '../../utils';
-import Toast from 'react-native-simple-toast';
 import { loginApi } from '../../services/outSideAuth';
 
 const RegisterScreen = ({navigation}) => {
@@ -88,12 +87,14 @@ const RegisterScreen = ({navigation}) => {
       isValid.push(x.config.valid)
     ))
     if(isValid.includes(false)){
-      Toast.show('please validate all the fields.');
+      // Toast.show('please validate all the fields.');
     }else{
       loginApi().then((response) => {
         console.log(response)
       })
-      .catch((err) => {console.log(err);Toast.show(err)});
+      .catch((err) => {console.log(err);
+        // Toast.show(err)
+      });
     }
   }
 

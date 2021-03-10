@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, TouchableOpacity, Keyboard, Alert} from 'react-native';
+import {View, TouchableOpacity, Keyboard} from 'react-native';
 import {Text} from 'react-native-paper';
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -7,11 +7,17 @@ import Feather from 'react-native-vector-icons/Feather';
 import LoginLayout from '../../sharedComponents/layout/loginLayout';
 import {loginStyle as styles} from './style';
 import CommonInput from '../../sharedComponents/commonInput';
-import {updateObject, validate} from '../../utils';
-import Toast from 'react-native-simple-toast';
+import {displayResponse, updateObject, validate} from '../../utils';
 import OutsideAuthApi from '../../services/outSideAuth';
+import DeviceInfo from 'react-native-device-info';
 
-const LoginScreen = ({navigation}) => {
+import * as actions from '../../store/actions';
+import {connect} from 'react-redux';
+import validation from '../../constants/validationMsg';
+
+let deviceId = DeviceInfo.getUniqueId();
+
+const LoginScreen = (props) => {
   const formElementsArray = [];
   const [data, setData] = React.useState({
     controls: {
@@ -74,7 +80,7 @@ const LoginScreen = ({navigation}) => {
         controls: updateObject(data.controls, {
           [type]: updateObject(data.controls[type], {
             value: val,
-            errors: 'Please Enter a valid email',
+            errors: validation.validateField('email'),
             valid: false,
           }),
         }),
@@ -84,8 +90,7 @@ const LoginScreen = ({navigation}) => {
         controls: updateObject(data.controls, {
           [type]: updateObject(data.controls[type], {
             value: val,
-            errors:
-              'Minimum eight characters, at least one letter, one number and one special character',
+            errors: validation.validateField('password'),
             valid: false,
           }),
         }),
@@ -117,17 +122,22 @@ const LoginScreen = ({navigation}) => {
     formElementsArray.map(
       (x) => ((val[x.id] = x.config.value), isValid.push(x.config.valid)),
     );
-    val.deviceId = 'addsfsdfsdfsddsf';
+    val.deviceId = deviceId;
     if (isValid.includes(false)) {
-      Toast.show('please validate all the fields.');
+      displayResponse('please validate all the fields.');
     } else {
+      props.loader(true);
       OutsideAuthApi()
         .loginApi(val)
         .then((res) => {
-          // Alert.alert(res);
-          navigation.navigate('RegisterScreen');
+          props.loader(false);
+          displayResponse(res,true);
+          props.navigation.navigate('RegisterScreen');
         })
-        .catch((err) => Alert.alert(err));
+        .catch((err) => {
+          props.loader(false);
+          displayResponse(err.message);
+        });
     }
   };
 
@@ -183,5 +193,10 @@ const LoginScreen = ({navigation}) => {
     </LoginLayout>
   );
 };
+const mapDispatchToProps = (dispatch) => {
+  return {
+    loader: (val) => dispatch(actions.loading(val)),
+  };
+};
 
-export default LoginScreen;
+export default connect(null, mapDispatchToProps)(LoginScreen);
