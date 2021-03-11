@@ -8,6 +8,8 @@ export const API = {
   },
   noAuthUrls: {
       loginUser: '/login',
+      otpVerify: '/email_varification',
+      registerUser: '/register_user',
   },
   authUrls: {
     // add the new api urls here which are inside the authentication

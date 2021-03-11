@@ -1,3 +1,4 @@
+import { Picker } from 'native-base';
 import React from 'react';
 import {View, TextInput} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
@@ -52,6 +53,19 @@ const CommonInput = (props) => {
           />
         </View>;
       break;
+      case 'select': 
+        inputElement =  <Picker
+        note
+        mode="dropdown"
+        style={{ width: '100%', height: 30 }}
+        selectedValue={props.value}
+        onValueChange={(val)=>props.onSelect(val,props.type)}
+      >
+        <Picker.Item label={props.placeholder} value="" disabled/>
+        {props.options.map( (s, i) => {
+            return <Picker.Item key={i} value={s} label={s} />
+        })}
+      </Picker>
   }
   return (
       inputElement

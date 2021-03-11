@@ -1,18 +1,65 @@
 import React from 'react';
-import {View, TouchableOpacity, Keyboard} from 'react-native';
+import {View, Keyboard} from 'react-native';
 import {Text} from 'react-native-paper';
-import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import LoginLayout from '../../sharedComponents/layout/loginLayout';
 import {loginStyle as styles} from './style';
 import CommonInput from '../../sharedComponents/commonInput';
-import {updateObject, validate} from '../../utils';
-import { loginApi } from '../../services/outSideAuth';
+import {displayResponse, updateObject, validate} from '../../utils';
+import OutsideAuthApi from '../../services/outSideAuth';
+import DeviceInfo from 'react-native-device-info';
 
-const RegisterScreen = ({navigation}) => {
+import * as actions from '../../store/actions';
+import {connect} from 'react-redux';
+import validation from '../../constants/validationMsg';
+import ButtonLayout from '../../sharedComponents/button';
+
+let deviceId = DeviceInfo.getUniqueId();
+
+const LoginScreen = (props) => {
+  const formElementsArray = [];
   const [data, setData] = React.useState({
     controls: {
+      name: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'name',
+          text: 'Name',
+          placeholder: 'Enter your name',
+        },
+        value: '',
+        validation: {
+          required: true,
+        },
+        valid: false,
+        errors: '',
+        className: [],
+        icons: [
+          <FontAwesome name="user-o" color="#05375a" size={20} />,
+          <Feather name="check-circle" color="green" size={20} />,
+        ],
+      },
+      gender: {
+        elementType: 'select',
+        elementConfig: {
+          type: 'gender',
+          text: 'Gender',
+          placeholder: 'Select Gender',
+        },
+        value: '',
+        validation: {
+          required: true,
+        },
+        options: ['Male', 'Femail'],
+        valid: false,
+        errors: '',
+        className: [],
+        icons: [
+          <FontAwesome name="user-o" color="#05375a" size={20} />,
+          <Feather name="check-circle" color="green" size={20} />,
+        ],
+      },
       email: {
         elementType: 'input',
         elementConfig: {
@@ -33,37 +80,58 @@ const RegisterScreen = ({navigation}) => {
           <Feather name="check-circle" color="green" size={20} />,
         ],
       },
+      password: {
+        elementType: 'password',
+        elementConfig: {
+          type: 'password',
+          text: 'Password',
+          placeholder: 'Enter your password',
+        },
+        value: '',
+        validation: {
+          required: true,
+          isEmail: true,
+        },
+        errors: '',
+        valid: false,
+        className: [],
+        icons: [
+          <FontAwesome name="lock" color="#05375a" size={20} />,
+          <Feather name={'eye-off'} color="gray" size={20} />,
+        ],
+      },
     },
   });
 
   const onInputChange = (val, type) => {
     let varVal = {};
-    if (!validate(val, {required:true})) {
+    if (!validate(val, {required: true})) {
       varVal = updateObject(data, {
         controls: updateObject(data.controls, {
           [type]: updateObject(data.controls[type], {
             value: val,
-            errors: 'this field is required',
+            errors: validation.requiredField(),
+            valid: false,
           }),
         }),
       });
-    }else if (type === 'email' && !validate(val, {isEmail:true})) {
+    } else if (type === 'email' && !validate(val, {isEmail: true})) {
       varVal = updateObject(data, {
         controls: updateObject(data.controls, {
           [type]: updateObject(data.controls[type], {
             value: val,
-            errors: 'Please Enter a valid email',
-            valid: false
+            errors: validation.validateField('email'),
+            valid: false,
           }),
         }),
       });
-    }else if (type === 'password' && !validate(val, {password:true})) {
+    } else if (type === 'password' && !validate(val, {password: true})) {
       varVal = updateObject(data, {
         controls: updateObject(data.controls, {
           [type]: updateObject(data.controls[type], {
             value: val,
-            errors: 'Minimum eight characters, at least one letter, one number and one special character',
-            valid: false
+            errors: validation.validateField('password'),
+            valid: false,
           }),
         }),
       });
@@ -73,7 +141,7 @@ const RegisterScreen = ({navigation}) => {
           [type]: updateObject(data.controls[type], {
             value: val,
             errors: '',
-            valid: true
+            valid: true,
           }),
         }),
       });
@@ -81,66 +149,129 @@ const RegisterScreen = ({navigation}) => {
     setData(varVal);
   };
 
-  const onSubmit = () => {
-    let isValid = []
-    formElementsArray.map((x) => (
-      isValid.push(x.config.valid)
-    ))
-    if(isValid.includes(false)){
-      // Toast.show('please validate all the fields.');
-    }else{
-      loginApi().then((response) => {
-        console.log(response)
-      })
-      .catch((err) => {console.log(err);
-        // Toast.show(err)
-      });
-    }
-  }
-
-  const formElementsArray = [];
-
   for (let key in data.controls) {
     formElementsArray.push({
       id: key,
       config: data.controls[key],
     });
   }
+
+  const onSubmit = () => {
+    let isValid = [];
+    let val = {};
+    formElementsArray.map(
+      (x) => ((val[x.id] = x.config.value), isValid.push(x.config.valid)),
+    );
+    val.deviceId = deviceId;
+    if (isValid.includes(false)) {
+      displayResponse('please validate all the fields.');
+    } else {
+      props.loader(true);
+      OutsideAuthApi()
+        .registerApi(val)
+        .then((res) => {
+          props.loader(false);
+          displayResponse(res, true);
+          props.navigation.navigate('RegisterScreen');
+        })
+        .catch((err) => {
+          props.loader(false);
+          displayResponse(err.message);
+        });
+    }
+  };
+
   return (
-    <LoginLayout headerText="Welcome">
-      {formElementsArray.map((x, index) => (
-        <CommonInput
-          key={index}
-          headerText={x.config.elementConfig.text}
-          placeholder={x.config.elementConfig.placeholder}
-          onInputChange={onInputChange}
-          onSubmit={() => Keyboard.dismiss()}
-          value={x.config.value}
-          type={x.config.elementConfig.type}
-          isValid={x.config.valid}
-          validation={x.config.validation}
-          className={x.config.className}
-          icons={x.config.icons}
-          ele={x.config.elementType}
-          errors={x.config.errors}
-        />
-      ))}
-      
+    <LoginLayout headerText="Register">
+      <View style={styles.inlineInput}>
+        <View style={{flex: 2.8}}>
+          <Text style={styles.text_footer}>
+            {data.controls.name.elementConfig.text}
+          </Text>
+          <CommonInput
+            placeholder={data.controls.name.elementConfig.placeholder}
+            onInputChange={onInputChange}
+            onSubmit={() => Keyboard.dismiss()}
+            value={data.controls.name.value}
+            type={data.controls.name.elementConfig.type}
+            isValid={data.controls.name.valid}
+            icons={data.controls.name.icons}
+            ele={data.controls.name.elementType}
+          />
+          {data.controls.name.errors ? (
+            <Text style={{color: 'red'}}>{data.controls.name.errors}</Text>
+          ) : null}
+        </View>
+        <View style={{flex: 2, marginLeft: 15}}>
+          <Text style={styles.text_footer}>
+            {data.controls.gender.elementConfig.text}
+          </Text>
+          <View style={[styles.action, {width: '100%', paddingLeft: 0}]}>
+            <CommonInput
+              placeholder={data.controls.gender.elementConfig.placeholder}
+              value={data.controls.gender.value}
+              onSelect={onInputChange}
+              options={data.controls.gender.options}
+              type={data.controls.gender.elementConfig.type}
+              icons={data.controls.gender.icons}
+              ele={data.controls.gender.elementType}
+            />
+          </View>
+          {data.controls.gender.errors ? (
+            <Text style={{color: 'red'}}>{data.controls.gender.errors}</Text>
+          ) : null}
+        </View>
+      </View>
+
+      <Text style={[styles.text_footer, {marginTop: 15}]}>
+        {data.controls.email.elementConfig.text}
+      </Text>
+      <CommonInput
+        placeholder={data.controls.email.elementConfig.placeholder}
+        onInputChange={onInputChange}
+        onSubmit={() => Keyboard.dismiss()}
+        value={data.controls.email.value}
+        type={data.controls.email.elementConfig.type}
+        isValid={data.controls.email.valid}
+        icons={data.controls.email.icons}
+        ele={data.controls.email.elementType}
+      />
+      {data.controls.email.errors ? (
+        <Text style={{color: 'red'}}>{data.controls.email.errors}</Text>
+      ) : null}
+      <Text style={[styles.text_footer, {marginTop: 15}]}>
+        {data.controls.password.elementConfig.text}
+      </Text>
+      <CommonInput
+        placeholder={data.controls.password.elementConfig.placeholder}
+        onInputChange={onInputChange}
+        onSubmit={() => Keyboard.dismiss()}
+        value={data.controls.password.value}
+        type={data.controls.password.elementConfig.type}
+        isValid={data.controls.password.valid}
+        icons={data.controls.password.icons}
+        ele={data.controls.password.elementType}
+      />
+      {data.controls.password.errors ? (
+        <Text style={{color: 'red'}}>{data.controls.password.errors}</Text>
+      ) : null}
       <View style={styles.button}>
-        <LinearGradient colors={['#08d464', '#01ab9d']} style={styles.signIn}>
-          <Text style={[styles.textSign, {color: 'white'}]} onPress={onSubmit}>Login</Text>
-        </LinearGradient>
-        <TouchableOpacity
-          style={[
-            styles.signIn,
-            {borderColor: '#009387', borderWidth: 1, marginTop: 15},
-          ]}
-          onPress={()=>{navigation.navigate('LoginScreen')}}>
-          <Text style={[styles.textSign, {color: '#009387'}]}>Loged in</Text>
-        </TouchableOpacity>
-      </View> 
+        <ButtonLayout onPress={onSubmit} buttonTxt="Login" />
+        <ButtonLayout
+          onPress={() => {
+            props.navigation.navigate('RegisterScreen');
+          }}
+          buttonTxt="Sign in"
+          outline
+        />
+      </View>
     </LoginLayout>
   );
 };
+const mapDispatchToProps = (dispatch) => {
+  return {
+    loader: (val) => dispatch(actions.loading(val)),
+  };
+};
 
-export default RegisterScreen;
+export default connect(null, mapDispatchToProps)(LoginScreen);

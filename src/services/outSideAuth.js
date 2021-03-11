@@ -16,7 +16,15 @@ const OutsideAuthApi = () => {
           headers: {...defaultHeaders},
           data: data,
         })
-      }
+      },
+      async registerApi(data){
+        return await axiosObj({
+            url: API.noAuthUrls.registerUser,
+            method: 'POST',
+            headers: {...defaultHeaders},
+            data: data,
+          })
+        }
     }
 }
 

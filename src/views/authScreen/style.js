@@ -106,4 +106,7 @@ export const loginStyle = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
   },
+  inlineInput:{
+    flexDirection: 'row'
+  },
 });

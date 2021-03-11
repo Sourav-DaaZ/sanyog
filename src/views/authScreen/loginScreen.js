@@ -1,7 +1,6 @@
 import React from 'react';
-import {View, TouchableOpacity, Keyboard} from 'react-native';
+import {View, Keyboard} from 'react-native';
 import {Text} from 'react-native-paper';
-import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import LoginLayout from '../../sharedComponents/layout/loginLayout';
@@ -47,7 +46,7 @@ const LoginScreen = (props) => {
         elementConfig: {
           type: 'password',
           text: 'Password',
-          placeholder: 'Enter yourpassword',
+          placeholder: 'Enter your password',
         },
         value: '',
         validation: {
@@ -72,7 +71,8 @@ const LoginScreen = (props) => {
         controls: updateObject(data.controls, {
           [type]: updateObject(data.controls[type], {
             value: val,
-            errors: 'this field is required',
+            errors: validation.requiredField(),
+            valid: false,
           }),
         }),
       });
