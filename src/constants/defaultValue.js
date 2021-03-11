@@ -1,5 +1,6 @@
 const  defaultValue = {
-    debuggingMode: false
+    debuggingMode: false,
+    otpLength: 4
 }
 
 export default defaultValue;

@@ -175,14 +175,14 @@ const LoginScreen = (props) => {
         <Text style={{color: 'red'}}>{data.controls.password.errors}</Text>
       ) : null}
       <View style={styles.button}>
-        <ButtonLayout onPress={onSubmit} buttonTxt="Login" />
+        <ButtonLayout onPress={onSubmit}>Login</ButtonLayout>
         <ButtonLayout
           onPress={() => {
             props.navigation.navigate('RegisterScreen');
           }}
-          buttonTxt="Sign in"
-          outline
-        />
+          outline>
+          Sign in
+        </ButtonLayout>
       </View>
     </LoginLayout>
   );

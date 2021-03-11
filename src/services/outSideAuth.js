@@ -24,7 +24,15 @@ const OutsideAuthApi = () => {
             headers: {...defaultHeaders},
             data: data,
           })
-        }
+        },
+      async verifyOtp(data){
+        return await axiosObj({
+            url: API.noAuthUrls.otpVerify,
+            method: 'POST',
+            headers: {...defaultHeaders},
+            data: data,
+          })
+        },
     }
 }
 

@@ -14,11 +14,15 @@ import * as actions from '../../store/actions';
 import {connect} from 'react-redux';
 import validation from '../../constants/validationMsg';
 import ButtonLayout from '../../sharedComponents/button';
+import ModalLayout from '../../sharedComponents/modal';
+import OtpLayout from '../../sharedComponents/otpLayout';
+import defaultValue from '../../constants/defaultValue';
 
 let deviceId = DeviceInfo.getUniqueId();
 
 const LoginScreen = (props) => {
   const formElementsArray = [];
+  const [visible, setVisible] = React.useState(false);
   const [data, setData] = React.useState({
     controls: {
       name: {
@@ -45,7 +49,7 @@ const LoginScreen = (props) => {
         elementConfig: {
           type: 'gender',
           text: 'Gender',
-          placeholder: 'Select Gender',
+          placeholder: 'Gender',
         },
         value: '',
         validation: {
@@ -100,6 +104,18 @@ const LoginScreen = (props) => {
           <Feather name={'eye-off'} color="gray" size={20} />,
         ],
       },
+      otp: {
+        elementType: 'otp',
+        value: '',
+        validation: {
+          required: true,
+          minLength: defaultValue.otpLength,
+        },
+        valid: false,
+        errors: '',
+        success: '',
+        className: [],
+      },
     },
   });
 
@@ -111,6 +127,19 @@ const LoginScreen = (props) => {
           [type]: updateObject(data.controls[type], {
             value: val,
             errors: validation.requiredField(),
+            valid: false,
+          }),
+        }),
+      });
+    } else if (
+      type === 'otp' &&
+      !validate(val, {minLength: defaultValue.otpLength})
+    ) {
+      varVal = updateObject(data, {
+        controls: updateObject(data.controls, {
+          [type]: updateObject(data.controls[type], {
+            value: val,
+            errors: validation.validateField('OTP'),
             valid: false,
           }),
         }),
@@ -159,26 +188,110 @@ const LoginScreen = (props) => {
   const onSubmit = () => {
     let isValid = [];
     let val = {};
+    console.log(formElementsArray);
     formElementsArray.map(
-      (x) => ((val[x.id] = x.config.value), isValid.push(x.config.valid)),
+      (x) => (
+        (val[x.id] = x.config.value),
+        !visible && x.id === 'otp' ? null : isValid.push(x.config.valid)
+      ),
     );
     val.deviceId = deviceId;
-    if (isValid.includes(false)) {
-      displayResponse('please validate all the fields.');
+    if (isValid.includes(false) && !visible) {
+      displayResponse(validation.validateField());
+    } else if (isValid.includes(false) && visible) {
+      let varVl;
+      varVl = updateObject(data, {
+        controls: updateObject(data.controls, {
+          otp: updateObject(data.controls.otp, {
+            errors: validation.validateField(),
+          }),
+        }),
+      });
+      setData(varVl);
     } else {
       props.loader(true);
-      OutsideAuthApi()
-        .registerApi(val)
-        .then((res) => {
-          props.loader(false);
-          displayResponse(res, true);
-          props.navigation.navigate('RegisterScreen');
-        })
-        .catch((err) => {
-          props.loader(false);
-          displayResponse(err.message);
+      if (!visible) {
+        let email = {
+          email: val.email,
+        };
+        let varVl;
+        varVl = updateObject(data, {
+          controls: updateObject(data.controls, {
+            otp: updateObject(data.controls.otp, {
+              errors: '',
+              value: '',
+            }),
+          }),
         });
+        setData(varVl);
+        OutsideAuthApi()
+          .verifyOtp(email)
+          .then((res) => {
+            props.loader(false);
+            displayResponse(res, true);
+            setVisible(true);
+          })
+          .catch((err) => {
+            props.loader(false);
+            displayResponse(err.message);
+          });
+      } else {
+        OutsideAuthApi()
+          .registerApi(val)
+          .then((res) => {
+            props.loader(false);
+            displayResponse(res, true);
+            props.navigation.navigate('LoginScreen');
+          })
+          .catch((err) => {
+            props.loader(false);
+            let varVl;
+            varVl = updateObject(data, {
+              controls: updateObject(data.controls, {
+                otp: updateObject(data.controls.otp, {
+                  errors: err.message,
+                }),
+              }),
+            });
+            setData(varVl);
+          });
+      }
     }
+  };
+
+  const resendOtp = () => {
+    props.loader(true);
+    OutsideAuthApi()
+      .verifyOtp({email: data.controls.email.value})
+      .then((res) => {
+        props.loader(false);
+        console.log(res);
+        displayResponse(res, true);
+        let varVl;
+        varVl = updateObject(data, {
+          controls: updateObject(data.controls, {
+            otp: updateObject(data.controls.otp, {
+              success: res.message,
+              errors: '',
+            }),
+          }),
+        });
+        setData(varVl);
+      })
+      .catch((err) => {
+        props.loader(false);
+        displayResponse(err.message);
+        let varVl;
+        varVl = updateObject(data, {
+          controls: updateObject(data.controls, {
+            otp: updateObject(data.controls.otp, {
+              errors: err.message,
+              success: '',
+            }),
+          }),
+        });
+        setData(varVl);
+      });
   };
 
   return (
@@ -255,16 +368,33 @@ const LoginScreen = (props) => {
       {data.controls.password.errors ? (
         <Text style={{color: 'red'}}>{data.controls.password.errors}</Text>
       ) : null}
+      <View></View>
       <View style={styles.button}>
-        <ButtonLayout onPress={onSubmit} buttonTxt="Login" />
+        <ButtonLayout onPress={onSubmit}>Login</ButtonLayout>
         <ButtonLayout
           onPress={() => {
             props.navigation.navigate('RegisterScreen');
           }}
-          buttonTxt="Sign in"
-          outline
-        />
+          outline>
+          Sign in
+        </ButtonLayout>
       </View>
+      <ModalLayout
+        visable={visible}
+        close={() => setVisible(false)}
+        title="Verify OTP"
+        onPress={onSubmit}
+        btnTxt="submit"
+        text="Example Modal.  Click outside this area to dismiss.">
+        <OtpLayout
+          resendOtp={resendOtp}
+          onChange={onInputChange}
+          value={data.controls.otp.value}
+          type={data.controls.otp.elementType}
+          error={data.controls.otp.errors}
+          success={data.controls.otp.success}
+        />
+      </ModalLayout>
     </LoginLayout>
   );
 };
