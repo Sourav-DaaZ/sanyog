@@ -107,6 +107,12 @@ export const loginStyle = StyleSheet.create({
     fontWeight: 'bold',
   },
   inlineInput:{
-    flexDirection: 'row'
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  otpBtn: {
+    color: '#00000060',
+    fontSize: 15,
+    marginTop: 10
   },
 });

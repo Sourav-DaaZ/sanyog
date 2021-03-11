@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Keyboard} from 'react-native';
+import {View, Keyboard, TouchableOpacity} from 'react-native';
 import {Text} from 'react-native-paper';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
@@ -14,11 +14,16 @@ import * as actions from '../../store/actions';
 import {connect} from 'react-redux';
 import validation from '../../constants/validationMsg';
 import ButtonLayout from '../../sharedComponents/button';
+import defaultValue from '../../constants/defaultValue';
+import ModalLayout from '../../sharedComponents/modal';
+import OtpLayout from '../../sharedComponents/otpLayout';
 
 let deviceId = DeviceInfo.getUniqueId();
 
 const LoginScreen = (props) => {
   const formElementsArray = [];
+  const [visible, setVisible] = React.useState(false);
+  const [isOtpLogin, setIsOtpLogin] = React.useState(false);
   const [data, setData] = React.useState({
     controls: {
       email: {
@@ -61,6 +66,18 @@ const LoginScreen = (props) => {
           <Feather name={'eye-off'} color="gray" size={20} />,
         ],
       },
+      otp: {
+        elementType: 'otp',
+        value: '',
+        validation: {
+          required: true,
+          minLength: defaultValue.otpLength,
+        },
+        valid: false,
+        errors: '',
+        success: '',
+        className: [],
+      },
     },
   });
 
@@ -96,6 +113,20 @@ const LoginScreen = (props) => {
           }),
         }),
       });
+    } else if (
+      type === 'otp' &&
+      !validate(val, {minLength: defaultValue.otpLength})
+    ) {
+      varVal = updateObject(data, {
+        controls: updateObject(data.controls, {
+          [type]: updateObject(data.controls[type], {
+            value: val,
+            errors: validation.validateField('OTP'),
+            success: '',
+            valid: false,
+          }),
+        }),
+      });
     } else {
       varVal = updateObject(data, {
         controls: updateObject(data.controls, {
@@ -121,25 +152,110 @@ const LoginScreen = (props) => {
     let isValid = [];
     let val = {};
     formElementsArray.map(
-      (x) => ((val[x.id] = x.config.value), isValid.push(x.config.valid)),
+      (x) => (
+        x.id == 'email' ||
+        (!isOtpLogin && x.id == 'password') ||
+        (isOtpLogin && visible && x.id == 'otp')
+          ? (val[x.id] = x.config.value)
+          : null,
+        (!isOtpLogin && x.id == 'password') ||
+        (isOtpLogin && visible && x.id == 'otp')
+          ? isValid.push(x.config.valid)
+          : null
+      ),
     );
     val.deviceId = deviceId;
     if (isValid.includes(false)) {
-      displayResponse('please validate all the fields.');
+      displayResponse(validation.validateField());
     } else {
       props.loader(true);
-      OutsideAuthApi()
-        .loginApi(val)
-        .then((res) => {
-          props.loader(false);
-          displayResponse(res, true);
-          props.navigation.navigate('RegisterScreen');
-        })
-        .catch((err) => {
-          props.loader(false);
-          displayResponse(err.message);
+      if (isOtpLogin && !visible) {
+        let email = {
+          email: val.email,
+        };
+        let varVl;
+        varVl = updateObject(data, {
+          controls: updateObject(data.controls, {
+            otp: updateObject(data.controls.otp, {
+              errors: '',
+              value: '',
+            }),
+          }),
         });
+        setData(varVl);
+        OutsideAuthApi()
+          .verifyOtp(email)
+          .then((res) => {
+            props.loader(false);
+            displayResponse(res, true);
+            setVisible(true);
+          })
+          .catch((err) => {
+            props.loader(false);
+            displayResponse(err.message);
+          });
+      } else {
+        OutsideAuthApi()
+          .loginApi(val)
+          .then((res) => {
+            props.loader(false);
+            displayResponse(res, true);
+            setVisible(false);
+            props.navigation.navigate('RegisterScreen');
+          })
+          .catch((err) => {
+            props.loader(false);
+            if (visible) {
+              let varVl;
+              varVl = updateObject(data, {
+                controls: updateObject(data.controls, {
+                  otp: updateObject(data.controls.otp, {
+                    errors: err.message,
+                  }),
+                }),
+              });
+              setData(varVl);
+            } else {
+              displayResponse(err.message);
+              Î;
+            }
+          });
+      }
     }
+  };
+
+  const resendOtp = () => {
+    props.loader(true);
+    OutsideAuthApi()
+      .verifyOtp({email: data.controls.email.value})
+      .then((res) => {
+        props.loader(false);
+        displayResponse(res, true);
+        let varVl;
+        varVl = updateObject(data, {
+          controls: updateObject(data.controls, {
+            otp: updateObject(data.controls.otp, {
+              success: res.message,
+              errors: '',
+            }),
+          }),
+        });
+        setData(varVl);
+      })
+      .catch((err) => {
+        props.loader(false);
+        displayResponse(err.message);
+        let varVl;
+        varVl = updateObject(data, {
+          controls: updateObject(data.controls, {
+            otp: updateObject(data.controls.otp, {
+              errors: err.message,
+              success: '',
+            }),
+          }),
+        });
+        setData(varVl);
+      });
   };
 
   return (
@@ -159,21 +275,37 @@ const LoginScreen = (props) => {
       {data.controls.email.errors ? (
         <Text style={{color: 'red'}}>{data.controls.email.errors}</Text>
       ) : null}
-      <Text style={[styles.text_footer, {marginTop: 35}]}>Password</Text>
-      <CommonInput
-        placeholder={data.controls.password.elementConfig.placeholder}
-        onInputChange={onInputChange}
-        onSubmit={() => Keyboard.dismiss()}
-        value={data.controls.password.value}
-        type={data.controls.password.elementConfig.type}
-        isValid={data.controls.password.valid}
-        validation={data.controls.password.validation}
-        icons={data.controls.password.icons}
-        ele={data.controls.password.elementType}
-      />
-      {data.controls.password.errors ? (
+      {!isOtpLogin ? (
+        <Text style={[styles.text_footer, {marginTop: 35}]}>Password</Text>
+      ) : null}
+      {!isOtpLogin ? (
+        <CommonInput
+          placeholder={data.controls.password.elementConfig.placeholder}
+          onInputChange={onInputChange}
+          onSubmit={() => Keyboard.dismiss()}
+          value={data.controls.password.value}
+          type={data.controls.password.elementConfig.type}
+          isValid={data.controls.password.valid}
+          validation={data.controls.password.validation}
+          icons={data.controls.password.icons}
+          ele={data.controls.password.elementType}
+        />
+      ) : null}
+      {data.controls.password.errors && !isOtpLogin ? (
         <Text style={{color: 'red'}}>{data.controls.password.errors}</Text>
       ) : null}
+      <View style={styles.inlineInput}>
+        <TouchableOpacity>
+          <Text style={styles.otpBtn}>
+            {!isOtpLogin ? 'Forgot Password?' : ''}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => setIsOtpLogin(!isOtpLogin)}>
+          <Text style={styles.otpBtn}>
+            {!isOtpLogin ? 'Login with otp?' : 'Login with password?'}
+          </Text>
+        </TouchableOpacity>
+      </View>
       <View style={styles.button}>
         <ButtonLayout onPress={onSubmit}>Login</ButtonLayout>
         <ButtonLayout
@@ -184,6 +316,21 @@ const LoginScreen = (props) => {
           Sign in
         </ButtonLayout>
       </View>
+      <ModalLayout
+        visable={visible}
+        close={() => setVisible(false)}
+        title="Verify OTP"
+        onPress={onSubmit}
+        btnTxt="submit">
+        <OtpLayout
+          resendOtp={resendOtp}
+          onChange={onInputChange}
+          value={data.controls.otp.value}
+          type={data.controls.otp.elementType}
+          error={data.controls.otp.errors}
+          success={data.controls.otp.success}
+        />
+      </ModalLayout>
     </LoginLayout>
   );
 };

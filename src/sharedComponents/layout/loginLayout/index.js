@@ -9,7 +9,6 @@ import { connect } from 'react-redux';
 
 const LoginLayout = (props) => (
   <View style={styles.container}>
-    {console.log(props)}
     <StatusBar backgroundColor="#009387" barStyle="light-content" />
     <Loader loading={props.loading}/>
     <View style={props.layout?styles.bigHeader:styles.header}>

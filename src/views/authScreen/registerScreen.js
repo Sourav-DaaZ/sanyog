@@ -241,6 +241,7 @@ const LoginScreen = (props) => {
           .then((res) => {
             props.loader(false);
             displayResponse(res, true);
+            setVisible(false);
             props.navigation.navigate('LoginScreen');
           })
           .catch((err) => {
@@ -265,7 +266,6 @@ const LoginScreen = (props) => {
       .verifyOtp({email: data.controls.email.value})
       .then((res) => {
         props.loader(false);
-        console.log(res);
         displayResponse(res, true);
         let varVl;
         varVl = updateObject(data, {
@@ -370,13 +370,13 @@ const LoginScreen = (props) => {
       ) : null}
       <View></View>
       <View style={styles.button}>
-        <ButtonLayout onPress={onSubmit}>Login</ButtonLayout>
+        <ButtonLayout onPress={onSubmit}>Sign in</ButtonLayout>
         <ButtonLayout
           onPress={() => {
-            props.navigation.navigate('RegisterScreen');
+            props.navigation.navigate('LoginScreen');
           }}
           outline>
-          Sign in
+          Login
         </ButtonLayout>
       </View>
       <ModalLayout
@@ -384,8 +384,7 @@ const LoginScreen = (props) => {
         close={() => setVisible(false)}
         title="Verify OTP"
         onPress={onSubmit}
-        btnTxt="submit"
-        text="Example Modal.  Click outside this area to dismiss.">
+        btnTxt="submit">
         <OtpLayout
           resendOtp={resendOtp}
           onChange={onInputChange}
