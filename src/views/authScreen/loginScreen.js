@@ -34,12 +34,12 @@ const LoginScreen = (props) => {
           text: 'Email',
           placeholder: 'Enter your email',
         },
-        value: 'souravdas.oo1@gmail.com',
+        value: '',
         validation: {
           required: true,
           isEmail: true,
         },
-        valid: true,
+        valid: false,
         errors: '',
         className: [],
         icons: [
@@ -54,13 +54,13 @@ const LoginScreen = (props) => {
           text: 'Password',
           placeholder: 'Enter your password',
         },
-        value: 'Password@123',
+        value: '',
         validation: {
           required: true,
           isEmail: true,
         },
         errors: '',
-        valid: true,
+        valid: false,
         className: [],
         icons: [
           <FontAwesome name="lock" color="#05375a" size={20} />,
