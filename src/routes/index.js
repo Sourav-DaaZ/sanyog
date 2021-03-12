@@ -3,14 +3,12 @@ import {Text} from 'react-native';
 import { connect } from 'react-redux';
 import {_retrieveData} from '../utils';
 import * as actions from '../store/actions';
-import AsyncStorage from '@react-native-community/async-storage';
 
 const OutsideAuthRoutes = React.lazy(() => import('./outsideAuthRoutes'));
 const InsidesideAuthRoutes = React.lazy(() => import('./insideAuthRoutes'));
 
 const RootStackScreen = (props) => {
   React.useEffect(() => {
-    // AsyncStorage.clear();
     fetchToken();
   }, []);
 
