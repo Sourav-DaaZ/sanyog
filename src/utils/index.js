@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import defaultValue from '../constants/defaultValue';
 import Toaster from '../sharedComponents/toster';
 
@@ -61,3 +62,21 @@ export const displayResponse = (msg, type) => {
   }
   return null;
 };
+
+export const _storeData = async (key, value) => {
+  try {
+    await AsyncStorage.setItem(key, JSON.stringify(value));
+  } catch (error) {
+    displayResponse(error);
+  }
+}
+
+export const _retrieveData = async (key) => {
+  try {
+    const data = await AsyncStorage.getItem(key);
+    return data;
+  } catch (error) {
+    displayResponse(error);
+  }
+}
+

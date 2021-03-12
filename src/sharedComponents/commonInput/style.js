@@ -1,8 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { Platform } from 'react-native';
 
-
-
 export const styles = StyleSheet.create({
   title: {
     color: '#05375a',
@@ -31,13 +29,14 @@ export const styles = StyleSheet.create({
     marginTop: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#f2f2f2',
-    paddingBottom: 0,
+    paddingBottom: Platform.OS === 'ios' ? 10 : 0,
   },
   textInput: {
     flex: 1,
-    marginTop: Platform.ios === 'ios' ? 0 : -12,
+    marginTop: Platform.OS === 'ios' ? 0 : -15,
     paddingLeft: 10,
     color: '#05375a',
+
   },
   signIn: {
     width: '100%',

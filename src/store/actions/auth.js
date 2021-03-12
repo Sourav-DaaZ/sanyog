@@ -13,3 +13,17 @@ export const loading = (load) => {
     };
 };
 
+export const accessTokenUpdate = (data) => {
+    return {
+        type: actionTypes.ACCESS_TOKEN_UPDATE,
+        data: data
+    };
+};
+
+export const refreshTokenUpdate = (data) => {
+    return {
+        type: actionTypes.REFRESH_TOKEN_UPDATE,
+        data: data
+    };
+};
+

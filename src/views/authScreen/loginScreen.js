@@ -6,7 +6,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import LoginLayout from '../../sharedComponents/layout/loginLayout';
 import {loginStyle as styles} from './style';
 import CommonInput from '../../sharedComponents/commonInput';
-import {displayResponse, updateObject, validate} from '../../utils';
+import {displayResponse, updateObject, validate, _storeData} from '../../utils';
 import OutsideAuthApi from '../../services/outSideAuth';
 import DeviceInfo from 'react-native-device-info';
 
@@ -17,6 +17,7 @@ import ButtonLayout from '../../sharedComponents/button';
 import defaultValue from '../../constants/defaultValue';
 import ModalLayout from '../../sharedComponents/modal';
 import OtpLayout from '../../sharedComponents/otpLayout';
+import AsyncStorage from '@react-native-community/async-storage';
 
 let deviceId = DeviceInfo.getUniqueId();
 
@@ -33,12 +34,12 @@ const LoginScreen = (props) => {
           text: 'Email',
           placeholder: 'Enter your email',
         },
-        value: '',
+        value: 'souravdas.oo1@gmail.com',
         validation: {
           required: true,
           isEmail: true,
         },
-        valid: false,
+        valid: true,
         errors: '',
         className: [],
         icons: [
@@ -53,13 +54,13 @@ const LoginScreen = (props) => {
           text: 'Password',
           placeholder: 'Enter your password',
         },
-        value: '',
+        value: 'Password@123',
         validation: {
           required: true,
           isEmail: true,
         },
         errors: '',
-        valid: false,
+        valid: true,
         className: [],
         icons: [
           <FontAwesome name="lock" color="#05375a" size={20} />,
@@ -197,11 +198,14 @@ const LoginScreen = (props) => {
       } else {
         OutsideAuthApi()
           .loginApi(val)
-          .then((res) => {
+          .then(async (res) => {
             props.loader(false);
             displayResponse(res, true);
             setVisible(false);
-            props.navigation.navigate('RegisterScreen');
+            props.updateAccessToken(res.data.access_token);
+            props.updateRefreshToken(res.data.refresh_token);
+            await _storeData('Token', res.data);
+            props.navigation.navigate('LandingScreen');
           })
           .catch((err) => {
             props.loader(false);
@@ -217,7 +221,6 @@ const LoginScreen = (props) => {
               setData(varVl);
             } else {
               displayResponse(err.message);
-              Î;
             }
           });
       }
@@ -337,6 +340,8 @@ const LoginScreen = (props) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     loader: (val) => dispatch(actions.loading(val)),
+    updateAccessToken: (data) => dispatch(actions.accessTokenUpdate(data)),
+    updateRefreshToken: (data) => dispatch(actions.refreshTokenUpdate(data)),
   };
 };
 

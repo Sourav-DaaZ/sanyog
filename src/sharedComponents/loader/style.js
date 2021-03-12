@@ -6,8 +6,7 @@ const styles = StyleSheet.create({
   loaderBackground: {
     position: 'absolute',
     flex: 1,
-    // backgroundColor: '#00000050',
-    backgroundColor: '#ffffff50',
+    backgroundColor: 'rgba(255,255,255,0.5)',
     top: 0,
     bottom: 0,
     left: 0,
@@ -25,10 +24,10 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     width: 60,
     height: 60,
-    shadowColor: '#ffffff',
+    shadowColor: 'gray',
     shadowRadius: 10,
-    shadowOpacity: .9,
-    elevation: 15
+    shadowOpacity: 0.9,
+    elevation: 15,
   },
 });
 
