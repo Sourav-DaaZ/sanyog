@@ -3,6 +3,7 @@ import {View} from 'react-native';
 import styles from './style';
 
 import { connect } from 'react-redux';
+import Geolocation from '@react-native-community/geolocation';
 
 const DashboardLayout = (props) => (
   <View style={styles.container}>
