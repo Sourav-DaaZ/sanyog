@@ -16,6 +16,7 @@ import RootStackScreen from './src/routes';
 import GlobalTheme from './src/contextProviders/globalThemeProvider';
 import {API} from './src/constants/apiConstant';
 import {Root} from 'native-base';
+import {MenuProvider} from 'react-native-popup-menu';
 
 if (API.currentEnv !== 'prod') {
   GLOBAL.XMLHttpRequest =
@@ -33,7 +34,9 @@ const App = () => {
     <Provider store={store}>
       <GlobalTheme dark={false}>
         <Root>
-          <RootStackScreen />
+          <MenuProvider>
+            <RootStackScreen />
+          </MenuProvider>
         </Root>
       </GlobalTheme>
     </Provider>

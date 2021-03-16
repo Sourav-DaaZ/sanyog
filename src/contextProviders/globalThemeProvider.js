@@ -9,6 +9,7 @@ import {
   DarkTheme as PaperDarkTheme,
   DefaultTheme as PaperDefaultTheme,
 } from 'react-native-paper';
+import { defaultColor, darkColor } from "../constants/colorCode";
 
 const customeDefaultTheme = {
   ...PaperDefaultTheme,
@@ -16,7 +17,7 @@ const customeDefaultTheme = {
   colors: {
     ...PaperDefaultTheme.colors,
     ...navigationDefaultTheme.colors,
-    // primary: 'rgb(255, 45, 85)',
+    ...defaultColor
   },
 };
 const customeDarkTheme = {
@@ -25,7 +26,7 @@ const customeDarkTheme = {
   colors: {
     ...PaperDarkTheme.colors,
     ...navigationDarkTheme.colors,
-    // primary: 'rgb(255, 45, 85)',
+    ...darkColor
   },
 };
 
