@@ -6,7 +6,7 @@ import {
   MenuTrigger,
 } from 'react-native-popup-menu';
 import {useTheme} from 'react-native-paper';
-import {Text} from 'native-base';
+import {Text} from 'react-native-paper';
 
 const MenuLayout = (props) => {
   const {colors} = useTheme();
@@ -34,3 +34,17 @@ const MenuLayout = (props) => {
 };
 
 export default MenuLayout;
+
+// <View>
+//   <MenuLayout
+//     terget={
+//       <MaterialIcons
+//         name="dots-vertical"
+//         color={colors.backgroundColor}
+//         style={{marginRight: 5}}
+//         size={30}
+//       />
+//     }
+//     menuOption={[{text: 'enter', function: () => alert(`Save`)}]}
+//   />
+// </View>

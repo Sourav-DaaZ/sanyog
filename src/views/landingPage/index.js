@@ -1,5 +1,6 @@
 import * as React from 'react';
-import {View, useWindowDimensions,Text} from 'react-native';
+import {View, useWindowDimensions} from 'react-native';
+import {Text} from 'react-native-paper';
 import {TabView, SceneMap} from 'react-native-tab-view';
 import DashboardLayout from '../../sharedComponents/layout/dashboardLayout';
 

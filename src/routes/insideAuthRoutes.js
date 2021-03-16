@@ -1,49 +1,66 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import DashboardLayout from '../sharedComponents/layout/dashboardLayout';
-import {Text, View} from 'native-base';
+import {Text} from 'react-native-paper';
+import {createDrawerNavigator} from '@react-navigation/drawer';
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useTheme} from 'react-native-paper';
-import MenuLayout from '../sharedComponents/menu';
+import {DrawerContent} from '../sharedComponents/drawer';
+import {styles} from './style';
 
 const RootStack = createStackNavigator();
+const Drawer = createDrawerNavigator();
 
-const InsideAuthRoutes = (props) => {
+const InsideAuthRoutes = () => {
   const {colors} = useTheme();
 
-  return (
+  const AllComponent = (props) => (
     <RootStack.Navigator>
       <RootStack.Screen
         name="LandingScreen"
         component={DashboardLayout}
         options={() => ({
           headerTitle: () => (
-            <Text style={{color: colors.backgroundColor, fontSize: 20,fontWeight: 'bold', letterSpacing: 1}}>
+            <Text
+              style={[styles.headerText,{color: colors.backgroundColor}]}>
               Sanyog
             </Text>
           ),
           headerStyle: {
             backgroundColor: colors.mainColor,
-            height: 60
+            height: 60,
           },
+          headerLeft: () => (
+            <MaterialIcons
+              name="menu"
+              color={colors.backgroundColor}
+              style={{marginLeft: 15}}
+              size={30}
+              onPress={() => props.navigation.openDrawer()}
+            />
+          ),
           headerRight: () => (
-            <View>
-              <MenuLayout
-                terget={
-                  <MaterialIcons
-                    name="dots-vertical"
-                    color={colors.backgroundColor}
-                    style={{marginRight: 5}}
-                    size={30}
-                  />
-                }
-                menuOption={[{text: 'enter', function: () => alert(`Save`)}]}
-              />
-            </View>
+            <MaterialIcons
+              name="chat"
+              color={colors.backgroundColor}
+              style={{marginRight: 15}}
+              size={30}
+            />
           ),
         })}
       />
     </RootStack.Navigator>
+  );
+
+  return (
+    <Drawer.Navigator
+      lazy={true}
+      initialRouteName="Home"
+      screenOptions={{headerShown: false}}
+      drawerStyle={{backgroundColor: 'black'}}
+      drawerContent={(props) => <DrawerContent {...props} />}>
+      <Drawer.Screen name="HomeDrawer" component={AllComponent} />
+    </Drawer.Navigator>
   );
 };
 

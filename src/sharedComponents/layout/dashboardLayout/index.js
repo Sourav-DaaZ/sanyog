@@ -46,7 +46,7 @@ const DashboardLayout = () => {
     <View style={styles.container}>
       <StatusBar backgroundColor={colors.mainColor} barStyle="light-content" />
       <TabView
-        lazy
+        lazy={true}
         indicatorStyle={{backgroundColor: '#000000'}}
         tabStyle={{backgroundColor: 'black', minHeight: 30}} // here
         renderLabel={({route, focused, color}) => (
@@ -58,16 +58,13 @@ const DashboardLayout = () => {
         renderTabBar={(props) => (
           <TabBar
             {...props}
-            // renderIcon={
-            //     props => getTabBarIcon(props)
-            // }
-            style={{backgroundColor: colors.mainColor, height: 50}}
+            style={{backgroundColor: colors.mainColor, height: 55}}
             // renderIcon={this.renderIcon}
             activeColor={colors.backgroundColor}
             labelStyle={{fontSize: 15, fontWeight: 'bold', letterSpacing: 1}}
             indicatorStyle={{
               backgroundColor: colors.backgroundColor,
-              height: 2.5,
+              height: 3.5,
             }}
           />
         )}
@@ -79,7 +76,7 @@ const DashboardLayout = () => {
           margin: 16,
           right: 0,
           bottom: 0,
-          backgroundColor: colors.mainColor
+          backgroundColor: colors.mainColor,
         }}
         icon="plus"
         onPress={() => console.log('Pressed')}
