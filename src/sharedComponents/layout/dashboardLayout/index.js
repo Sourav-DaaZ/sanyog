@@ -7,9 +7,10 @@ import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import {_retrieveData} from '../../../utils';
 import Geolocation from '@react-native-community/geolocation';
 import {useTheme} from 'react-native-paper';
-import {FAB} from 'react-native-paper';
+import {FAB} from 'react-native-paper'; 
+import AllGroups from '../../../views/allGroups'; 
 
-const DashboardLayout = () => {
+const DashboardLayout = (props) => {
   const [user, setUser] = useState('');
   const layout = useWindowDimensions();
   const [index, setIndex] = React.useState(0);
@@ -19,12 +20,6 @@ const DashboardLayout = () => {
     fetchUser();
   }, []);
 
-  const FirstRoute = () => (
-    <View style={{flex: 1}}>
-      <Text>{user}</Text>
-    </View>
-  );
-
   const SecondRoute = () => <View style={{flex: 1}} />;
 
   const fetchUser = async () => {
@@ -33,22 +28,23 @@ const DashboardLayout = () => {
   };
 
   const [routes] = React.useState([
-    {key: 'first', title: 'First'},
+    {key: 'groups', title: 'Groups'},
     {key: 'second', title: 'Second'},
   ]);
-
-  const renderScene = SceneMap({
-    first: FirstRoute,
-    second: SecondRoute,
-  });
+  
+  const renderScene = ({ route, jumpTo }) => {
+    switch (route.key) {
+      case 'groups':
+        return <AllGroups jumpTo={jumpTo} {...props} />;
+    }
+  };
 
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={colors.mainColor} barStyle="light-content" />
       <TabView
         lazy={true}
-        indicatorStyle={{backgroundColor: '#000000'}}
-        tabStyle={{backgroundColor: 'black', minHeight: 30}} // here
+        indicatorStyle={{backgroundColor: colors.backgroundColor}}
         renderLabel={({route, focused, color}) => (
           <Text style={{color, margin: 8}}>{'hii'}</Text>
         )}

@@ -49,7 +49,6 @@ export const displayResponse = (msg, type) => {
   if (type === undefined) {
     type = false;
   }
-  console.log(typeof msg, type, defaultValue.debuggingMode);
   if (typeof msg === 'string' && defaultValue.debuggingMode && !type) {
     return Toaster(msg, 10000);
   } else if (typeof msg === 'string' && !defaultValue.debuggingMode && !type) {

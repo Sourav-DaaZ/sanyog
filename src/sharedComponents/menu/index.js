@@ -34,17 +34,3 @@ const MenuLayout = (props) => {
 };
 
 export default MenuLayout;
-
-// <View>
-//   <MenuLayout
-//     terget={
-//       <MaterialIcons
-//         name="dots-vertical"
-//         color={colors.backgroundColor}
-//         style={{marginRight: 5}}
-//         size={30}
-//       />
-//     }
-//     menuOption={[{text: 'enter', function: () => alert(`Save`)}]}
-//   />
-// </View>

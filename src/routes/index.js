@@ -17,7 +17,6 @@ const RootStackScreen = (props) => {
     props.updateAccessToken(JSON.parse(varToken).access_token);
     props.updateRefreshToken(JSON.parse(varToken).refresh_token);
   };
-  console.log(props)
   return (
     <React.Suspense fallback={<Text>LOADING....</Text>}>
       {(

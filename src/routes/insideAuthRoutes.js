@@ -1,19 +1,21 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import DashboardLayout from '../sharedComponents/layout/dashboardLayout';
-import {Text} from 'react-native-paper';
+import {Text, useTheme} from 'react-native-paper';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useTheme} from 'react-native-paper';
+
 import {DrawerContent} from '../sharedComponents/drawer';
 import {styles} from './style';
+import ChatScreen from '../views/chatScreen';
+import BackBtn from '../sharedComponents/backBtn';
 
 const RootStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
 const InsideAuthRoutes = () => {
   const {colors} = useTheme();
-
+  
   const AllComponent = (props) => (
     <RootStack.Navigator>
       <RootStack.Screen
@@ -21,14 +23,15 @@ const InsideAuthRoutes = () => {
         component={DashboardLayout}
         options={() => ({
           headerTitle: () => (
-            <Text
-              style={[styles.headerText,{color: colors.backgroundColor}]}>
+            <Text style={[styles.headerText, {color: colors.backgroundColor}]}>
               Sanyog
             </Text>
           ),
           headerStyle: {
             backgroundColor: colors.mainColor,
             height: 60,
+            borderBottomWidth: 0,
+            shadowOpacity: 0,
           },
           headerLeft: () => (
             <MaterialIcons
@@ -47,6 +50,24 @@ const InsideAuthRoutes = () => {
               size={30}
             />
           ),
+        })}
+      />
+      <RootStack.Screen
+        name="ChatScreen"
+        component={ChatScreen}
+        options={() => ({
+          headerTitle: () => (
+            <Text style={[styles.headerText, {color: colors.backgroundColor}]}>
+              DaaZ
+            </Text>
+          ),
+          headerStyle: {
+            backgroundColor: colors.mainColor,
+            height: 60,
+            borderBottomWidth: 0,
+            shadowOpacity: 0,
+          },
+          headerLeft: () => (<BackBtn onClick={() => props.navigation.goBack()} size={35}/>),
         })}
       />
     </RootStack.Navigator>
