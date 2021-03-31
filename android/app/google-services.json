@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "653110732806",
+    "project_id": "sanyog-6e313",
+    "storage_bucket": "sanyog-6e313.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:653110732806:android:a6d055f1b6b4a85bd9bb87",
+        "android_client_info": {
+          "package_name": "com.sanyog_frontend"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "653110732806-bgn2hfqrcv1f9m1i0vfi77k7f80980dd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBG_nskCoBbi62-5IN4zytF828I_WEueBU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "653110732806-bgn2hfqrcv1f9m1i0vfi77k7f80980dd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
