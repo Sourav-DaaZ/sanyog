@@ -1,7 +1,7 @@
 export const  defaultColor = {
     mainColor: 'rgb(103, 58, 183)',
-    upColorForGradient: 'rgb(164, 115, 219)',
-    downColorForGradient: 'rgb(208, 179, 235)',
+    upColorForGradient: 'rgb(103, 58, 183)',
+    downColorForGradient: 'rgb(149, 99, 177)',
     backgroundColor: '#ffffff',
     headerColor: '#05375a',
     iconColor: '#05375a',

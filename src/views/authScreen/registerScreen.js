@@ -20,9 +20,19 @@ import defaultValue from '../../constants/defaultValue';
 
 let deviceId = DeviceInfo.getUniqueId();
 
+const numberReturn = (min, max) => {
+  let num = [];
+  for(let i = min; i <= max; i++){
+    num.push(i.toString())
+  }
+  return num;
+}
+
 const RegisterScreen = (props) => {
   const formElementsArray = [];
   const [visible, setVisible] = React.useState(false);
+  let allNum = numberReturn(18, 100);
+
   const [data, setData] = React.useState({
     controls: {
       name: {
@@ -56,6 +66,46 @@ const RegisterScreen = (props) => {
           required: true,
         },
         options: ['Male', 'Femail'],
+        valid: false,
+        errors: '',
+        className: [],
+        icons: [
+          <FontAwesome name="user-o" color="#05375a" size={20} />,
+          <Feather name="check-circle" color="green" size={20} />,
+        ],
+      },
+      age: {
+        elementType: 'select',
+        elementConfig: {
+          type: 'age',
+          text: 'Age',
+          placeholder: 'Age',
+        },
+        value: '',
+        validation: {
+          required: true,
+        },
+        options: [],
+        valid: false,
+        errors: '',
+        className: [],
+        icons: [
+          <FontAwesome name="user-o" color="#05375a" size={20} />,
+          <Feather name="check-circle" color="green" size={20} />,
+        ],
+      },
+      type: {
+        elementType: 'multi-select',
+        elementConfig: {
+          type: 'catagory',
+          text: 'Catagory',
+          placeholder: 'Enter catagorys',
+        },
+        value: '',
+        validation: {
+          required: true,
+        },
+        options: [],
         valid: false,
         errors: '',
         className: [],
@@ -238,7 +288,7 @@ const RegisterScreen = (props) => {
       } else {
         OutsideAuthApi()
           .registerApi(val)
-          .then(async(res) => {
+          .then(async (res) => {
             props.loader(false);
             displayResponse(res, true);
             setVisible(false);
@@ -299,9 +349,7 @@ const RegisterScreen = (props) => {
 
   return (
     <LoginLayout headerText="Register">
-      <View style={styles.inlineInput}>
-        <View style={{flex: 2.8}}>
-          <Text style={styles.text_footer}>
+      <Text style={styles.text_footer}>
             {data.controls.name.elementConfig.text}
           </Text>
           <CommonInput
@@ -317,6 +365,25 @@ const RegisterScreen = (props) => {
           {data.controls.name.errors ? (
             <Text style={{color: 'red'}}>{data.controls.name.errors}</Text>
           ) : null}
+      <View style={[styles.inlineInput, {marginTop: 15}]}>
+        <View style={{flex: 2.8}}>
+          <Text style={styles.text_footer}>
+        {data.controls.age.elementConfig.text}
+      </Text>
+      <View style={[styles.action, {width: '100%', paddingLeft: 0}]}>
+        <CommonInput
+          placeholder={data.controls.age.elementConfig.placeholder}
+          value={data.controls.age.value}
+          onSelect={onInputChange}
+          options={numberReturn(18,99)}
+          type={data.controls.age.elementConfig.type}
+          icons={data.controls.age.icons}
+          ele={data.controls.age.elementType}
+        />
+      </View>
+      {data.controls.age.errors ? (
+        <Text style={{color: 'red'}}>{data.controls.age.errors}</Text>
+      ) : null}
         </View>
         <View style={{flex: 2, marginLeft: 15}}>
           <Text style={styles.text_footer}>
@@ -339,6 +406,16 @@ const RegisterScreen = (props) => {
         </View>
       </View>
 
+      {/* <CommonInput
+          placeholder={data.controls.type.elementConfig.placeholder}
+          value={data.controls.type.value}
+          onSelect={onInputChange}
+          options={data.controls.type.options}
+          type={data.controls.type.elementConfig.type}
+          icons={data.controls.type.icons}
+          ele={data.controls.type.elementType}
+        /> */}
+
       <Text style={[styles.text_footer, {marginTop: 15}]}>
         {data.controls.email.elementConfig.text}
       </Text>
@@ -355,6 +432,7 @@ const RegisterScreen = (props) => {
       {data.controls.email.errors ? (
         <Text style={{color: 'red'}}>{data.controls.email.errors}</Text>
       ) : null}
+
       <Text style={[styles.text_footer, {marginTop: 15}]}>
         {data.controls.password.elementConfig.text}
       </Text>
@@ -371,7 +449,7 @@ const RegisterScreen = (props) => {
       {data.controls.password.errors ? (
         <Text style={{color: 'red'}}>{data.controls.password.errors}</Text>
       ) : null}
-      <View></View>
+
       <View style={styles.button}>
         <ButtonLayout onPress={onSubmit}>Sign in</ButtonLayout>
         <ButtonLayout

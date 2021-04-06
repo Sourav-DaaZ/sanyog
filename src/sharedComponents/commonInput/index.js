@@ -3,6 +3,7 @@ import React from 'react';
 import {View, TextInput} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import {styles} from './style';
+// import { Multiselect } from 'multiselect-react-dropdown';
 
 const CommonInput = (props) => {
   const [dot, setDot] = React.useState(true);
@@ -65,7 +66,11 @@ const CommonInput = (props) => {
         {props.options.map( (s, i) => {
             return <Picker.Item key={i} value={s} label={s} />
         })}
-      </Picker>
+      </Picker>;
+      break;
+      // case 'multi-select': 
+      // inputElement = <Multiselect options={props.options} displayValue="name"/>
+      // break;
   }
   return (
       inputElement

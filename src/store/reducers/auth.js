@@ -14,7 +14,8 @@ const loading = (state, action) => {
 
 const accessTokenUpdate = (state, action) => {
   return updateObject(state, {
-    access_token: action.data,
+    // access_token: action.data,
+    access_token: null,
   });
 };
 

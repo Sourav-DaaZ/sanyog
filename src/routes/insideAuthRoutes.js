@@ -29,7 +29,6 @@ const InsideAuthRoutes = () => {
           ),
           headerStyle: {
             backgroundColor: colors.mainColor,
-            height: 60,
             borderBottomWidth: 0,
             shadowOpacity: 0,
           },
@@ -63,7 +62,6 @@ const InsideAuthRoutes = () => {
           ),
           headerStyle: {
             backgroundColor: colors.mainColor,
-            height: 60,
             borderBottomWidth: 0,
             shadowOpacity: 0,
           },
