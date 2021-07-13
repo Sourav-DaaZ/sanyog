@@ -20,18 +20,9 @@ import defaultValue from '../../constants/defaultValue';
 
 let deviceId = DeviceInfo.getUniqueId();
 
-const numberReturn = (min, max) => {
-  let num = [];
-  for(let i = min; i <= max; i++){
-    num.push(i.toString())
-  }
-  return num;
-}
-
 const RegisterScreen = (props) => {
   const formElementsArray = [];
   const [visible, setVisible] = React.useState(false);
-  let allNum = numberReturn(18, 100);
 
   const [data, setData] = React.useState({
     controls: {
@@ -54,58 +45,17 @@ const RegisterScreen = (props) => {
           <Feather name="check-circle" color="green" size={20} />,
         ],
       },
-      gender: {
-        elementType: 'select',
+      user_name: {
+        elementType: 'input',
         elementConfig: {
-          type: 'gender',
-          text: 'Gender',
-          placeholder: 'Gender',
+          type: 'user_name',
+          text: 'User Name',
+          placeholder: 'Enter your user name',
         },
         value: '',
         validation: {
           required: true,
         },
-        options: ['Male', 'Femail'],
-        valid: false,
-        errors: '',
-        className: [],
-        icons: [
-          <FontAwesome name="user-o" color="#05375a" size={20} />,
-          <Feather name="check-circle" color="green" size={20} />,
-        ],
-      },
-      age: {
-        elementType: 'select',
-        elementConfig: {
-          type: 'age',
-          text: 'Age',
-          placeholder: 'Age',
-        },
-        value: '',
-        validation: {
-          required: true,
-        },
-        options: [],
-        valid: false,
-        errors: '',
-        className: [],
-        icons: [
-          <FontAwesome name="user-o" color="#05375a" size={20} />,
-          <Feather name="check-circle" color="green" size={20} />,
-        ],
-      },
-      type: {
-        elementType: 'multi-select',
-        elementConfig: {
-          type: 'catagory',
-          text: 'Catagory',
-          placeholder: 'Enter catagorys',
-        },
-        value: '',
-        validation: {
-          required: true,
-        },
-        options: [],
         valid: false,
         errors: '',
         className: [],
@@ -347,9 +297,48 @@ const RegisterScreen = (props) => {
       });
   };
 
+  const onBlurFunc = (type) => {
+    let userName = {
+      user_name: data.controls.user_name.value,
+    };
+    OutsideAuthApi()
+      .verifyUserName(userName)
+      .then((res) => {
+        console.log(res.message);
+        let varVal = {};
+        if (res.message === 'Available') {
+          varVal = updateObject(data, {
+            controls: updateObject(data.controls, {
+              [type]: updateObject(data.controls[type], {
+                value: data.controls.user_name.value,
+                errors: '',
+                valid: true,
+              }),
+            }),
+          });
+        } else {
+          varVal = updateObject(data, {
+            controls: updateObject(data.controls, {
+              [type]: updateObject(data.controls[type], {
+                value: data.controls.user_name.value,
+                errors: res.message,
+                valid: false,
+              }),
+            }),
+          });
+        }
+        setData(varVal);
+      })
+      .catch((err) => {
+        displayResponse(err.message);
+      });
+  };
+
   return (
     <LoginLayout headerText="Register">
-      <Text style={styles.text_footer}>
+      <View style={styles.inlineInput}>
+        <View style={{flex: 2}}>
+          <Text style={styles.text_footer}>
             {data.controls.name.elementConfig.text}
           </Text>
           <CommonInput
@@ -365,56 +354,27 @@ const RegisterScreen = (props) => {
           {data.controls.name.errors ? (
             <Text style={{color: 'red'}}>{data.controls.name.errors}</Text>
           ) : null}
-      <View style={[styles.inlineInput, {marginTop: 15}]}>
-        <View style={{flex: 2.8}}>
-          <Text style={styles.text_footer}>
-        {data.controls.age.elementConfig.text}
-      </Text>
-      <View style={[styles.action, {width: '100%', paddingLeft: 0}]}>
-        <CommonInput
-          placeholder={data.controls.age.elementConfig.placeholder}
-          value={data.controls.age.value}
-          onSelect={onInputChange}
-          options={numberReturn(18,99)}
-          type={data.controls.age.elementConfig.type}
-          icons={data.controls.age.icons}
-          ele={data.controls.age.elementType}
-        />
-      </View>
-      {data.controls.age.errors ? (
-        <Text style={{color: 'red'}}>{data.controls.age.errors}</Text>
-      ) : null}
         </View>
         <View style={{flex: 2, marginLeft: 15}}>
           <Text style={styles.text_footer}>
-            {data.controls.gender.elementConfig.text}
+            {data.controls.user_name.elementConfig.text}
           </Text>
-          <View style={[styles.action, {width: '100%', paddingLeft: 0}]}>
-            <CommonInput
-              placeholder={data.controls.gender.elementConfig.placeholder}
-              value={data.controls.gender.value}
-              onSelect={onInputChange}
-              options={data.controls.gender.options}
-              type={data.controls.gender.elementConfig.type}
-              icons={data.controls.gender.icons}
-              ele={data.controls.gender.elementType}
-            />
-          </View>
-          {data.controls.gender.errors ? (
-            <Text style={{color: 'red'}}>{data.controls.gender.errors}</Text>
+          <CommonInput
+            placeholder={data.controls.user_name.elementConfig.placeholder}
+            onInputChange={onInputChange}
+            onSubmit={() => Keyboard.dismiss()}
+            value={data.controls.user_name.value}
+            type={data.controls.user_name.elementConfig.type}
+            isValid={data.controls.user_name.valid}
+            icons={data.controls.user_name.icons}
+            onBlur={onBlurFunc}
+            ele={data.controls.user_name.elementType}
+          />
+          {data.controls.user_name.errors ? (
+            <Text style={{color: 'red'}}>{data.controls.user_name.errors}</Text>
           ) : null}
         </View>
       </View>
-
-      {/* <CommonInput
-          placeholder={data.controls.type.elementConfig.placeholder}
-          value={data.controls.type.value}
-          onSelect={onInputChange}
-          options={data.controls.type.options}
-          type={data.controls.type.elementConfig.type}
-          icons={data.controls.type.icons}
-          ele={data.controls.type.elementType}
-        /> */}
 
       <Text style={[styles.text_footer, {marginTop: 15}]}>
         {data.controls.email.elementConfig.text}

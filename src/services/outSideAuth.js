@@ -9,25 +9,33 @@ const OutsideAuthApi = () => {
       "Content-Type": "multipart/form-data",
   };
   return {
-    async loginApi(data){
-      return await axiosObj({
+    loginApi(data){
+      return axiosObj({
           url: API.noAuthUrls.loginUser,
           method: 'POST',
           headers: {...defaultHeaders},
           data: data,
         })
       },
-      async registerApi(data){
-        return await axiosObj({
+      registerApi(data){
+        return axiosObj({
             url: API.noAuthUrls.registerUser,
             method: 'POST',
             headers: {...defaultHeaders},
             data: data,
           })
         },
-      async verifyOtp(data){
-        return await axiosObj({
+      verifyOtp(data){
+        return axiosObj({
             url: API.noAuthUrls.otpVerify,
+            method: 'POST',
+            headers: {...defaultHeaders},
+            data: data,
+          })
+        },
+      verifyUserName(data){
+        return axiosObj({
+            url: API.noAuthUrls.verifyUserName,
             method: 'POST',
             headers: {...defaultHeaders},
             data: data,

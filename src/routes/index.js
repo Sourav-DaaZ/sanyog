@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text} from 'react-native-paper';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import {_retrieveData} from '../utils';
 import * as actions from '../store/actions';
 
@@ -14,15 +14,13 @@ const RootStackScreen = (props) => {
 
   const fetchToken = async () => {
     const varToken = await _retrieveData('Token');
+    console.log(varToken);
     props.updateAccessToken(JSON.parse(varToken).access_token);
     props.updateRefreshToken(JSON.parse(varToken).refresh_token);
   };
   return (
     <React.Suspense fallback={<Text>LOADING....</Text>}>
-      {(
-        props.access_token &&
-        props.access_token.length > 0
-      ) ? (
+      {props.access_token && props.access_token.length > 0 ? (
         <InsidesideAuthRoutes />
       ) : (
         <OutsideAuthRoutes />

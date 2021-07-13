@@ -1,4 +1,4 @@
-import { Picker } from 'native-base';
+import {Picker} from 'native-base';
 import React from 'react';
 import {View, TextInput} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
@@ -10,7 +10,8 @@ const CommonInput = (props) => {
   let inputElement = null;
   switch (props.ele) {
     case 'input':
-      inputElement = <View
+      inputElement = (
+        <View
           style={props.style ? [styles.action, props.style[1]] : styles.action}>
           {/* <FontAwesome name="user-o" color="#05375a" size={20} /> */}
           {props.icons ? props.icons[0] : null}
@@ -23,14 +24,17 @@ const CommonInput = (props) => {
             }
             onChangeText={(val) => props.onInputChange(val, props.type)}
             value={props.value}
+            onBlur={() => props.onBlur?props.onBlur(props.type):null}
             onSubmitEditing={() => props.onSubmit()}
             autoCapitalize="none"
           />
           {props.isValid ? (props.icons ? props.icons[1] : null) : null}
-        </View>;
+        </View>
+      );
       break;
     case 'password':
-      inputElement = <View
+      inputElement = (
+        <View
           style={props.style ? [styles.action, props.style[1]] : styles.action}>
           {props.icons ? props.icons[0] : null}
           <TextInput
@@ -52,29 +56,29 @@ const CommonInput = (props) => {
             size={20}
             onPress={() => setDot(!dot)}
           />
-        </View>;
+        </View>
+      );
       break;
-      case 'select': 
-        inputElement =  <Picker
-        note
-        mode="dropdown"
-        style={{ width: '100%', height: 30 }}
-        selectedValue={props.value}
-        onValueChange={(val)=>props.onSelect(val,props.type)}
-      >
-        <Picker.Item label={props.placeholder} value="" disabled/>
-        {props.options.map( (s, i) => {
-            return <Picker.Item key={i} value={s} label={s} />
-        })}
-      </Picker>;
+    case 'select':
+      inputElement = (
+        <Picker
+          note
+          mode="dropdown"
+          style={{width: '100%', height: 30}}
+          selectedValue={props.value}
+          onValueChange={(val) => props.onSelect(val, props.type)}>
+          <Picker.Item label={props.placeholder} value="" disabled />
+          {props.options.map((s, i) => {
+            return <Picker.Item key={i} value={s} label={s} />;
+          })}
+        </Picker>
+      );
       break;
-      // case 'multi-select': 
-      // inputElement = <Multiselect options={props.options} displayValue="name"/>
-      // break;
+    // case 'multi-select':
+    // inputElement = <Multiselect options={props.options} displayValue="name"/>
+    // break;
   }
-  return (
-      inputElement
-  );
+  return inputElement;
 };
 
 export default CommonInput;
