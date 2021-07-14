@@ -14,7 +14,6 @@ const RootStackScreen = (props) => {
 
   const fetchToken = async () => {
     const varToken = await _retrieveData('Token');
-    console.log(varToken);
     props.updateAccessToken(JSON.parse(varToken).access_token);
     props.updateRefreshToken(JSON.parse(varToken).refresh_token);
   };

@@ -15,7 +15,7 @@ const Drawer = createDrawerNavigator();
 
 const InsideAuthRoutes = () => {
   const {colors} = useTheme();
-  
+
   const AllComponent = (props) => (
     <RootStack.Navigator>
       <RootStack.Screen
@@ -65,7 +65,9 @@ const InsideAuthRoutes = () => {
             borderBottomWidth: 0,
             shadowOpacity: 0,
           },
-          headerLeft: () => (<BackBtn onClick={() => props.navigation.goBack()} size={35}/>),
+          headerLeft: () => (
+            <BackBtn onClick={() => props.navigation.goBack()} size={35} />
+          ),
         })}
       />
     </RootStack.Navigator>
