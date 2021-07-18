@@ -10,7 +10,7 @@ import {Avatar, Card, useTheme} from 'react-native-paper';
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MenuLayout from '../../sharedComponents/menu';
 
-const AllGroups = (props) => {
+const SearchScreen = (props) => {
   const {colors} = useTheme();
   const [refreshing, setRefreshing] = React.useState(false);
 
@@ -55,4 +55,4 @@ const AllGroups = (props) => {
   );
 };
 
-export default AllGroups;
+export default SearchScreen;

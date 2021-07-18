@@ -6,8 +6,7 @@ import {connect} from 'react-redux';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import {_retrieveData} from '../../../utils';
 import Geolocation from '@react-native-community/geolocation';
-import {useTheme} from 'react-native-paper';
-import {FAB} from 'react-native-paper'; 
+import {useTheme, FAB} from 'react-native-paper';
 import AllGroups from '../../../views/allGroups'; 
 
 const DashboardLayout = (props) => {
@@ -51,9 +50,9 @@ const DashboardLayout = (props) => {
         navigationState={{index, routes}}
         renderScene={renderScene}
         onIndexChange={setIndex}
-        renderTabBar={(props) => (
+        renderTabBar={(prop) => (
           <TabBar
-            {...props}
+            {...prop}
             style={{backgroundColor: colors.mainColor, height: 55}}
             // renderIcon={this.renderIcon}
             activeColor={colors.backgroundColor}
@@ -75,7 +74,7 @@ const DashboardLayout = (props) => {
           backgroundColor: colors.mainColor,
         }}
         icon="plus"
-        onPress={() => console.log('Pressed')}
+        onPress={() => props.navigation.navigate('SearchScreen')}
       />
     </View>
   );
