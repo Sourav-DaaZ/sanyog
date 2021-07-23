@@ -1,24 +1,8 @@
 import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
-  sendingContainer: {
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-    marginTop: 15,
-    marginRight: -20,
-  },
-  bottomComponentContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  imageViewer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    paddingVertical: 15,
-    alignItems: 'center',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
+  outerBox: {
+    borderColor: 'red',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -28,6 +12,38 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
 
     elevation: 5,
+    backgroundColor: '#ffffff',
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    marginHorizontal: 20,
+  },
+  inlineInput: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  buttonInput: {
+    width: '20%',
+  },
+  inputField: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#f2f2f2',
+    width: '75%',
+    marginRight: '5%',
+  },
+  headerText: {
+    color: '#000000',
+    textAlign: 'center',
+    fontSize: 25,
+    fontWeight: 'bold',
+    marginTop: -30,
+    marginBottom: 15,
+  },
+  bottomText: {
+    textAlign: 'center',
+    fontSize: 16,
+    marginTop: 20,
+    marginBottom: 10,
+    textDecorationLine: 'underline',
   },
 });
 
