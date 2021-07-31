@@ -40,7 +40,7 @@ const OutsideAuthApi = () => {
             headers: {...defaultHeaders},
             data: data,
           })
-        },
+        }
     }
 }
 

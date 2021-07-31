@@ -1,12 +1,8 @@
 import {View} from 'native-base';
 import * as React from 'react';
-import {
-  Alert,
-  ScrollView,
-  TouchableOpacity,
-  Keyboard,
-} from 'react-native';
+import {Alert, ScrollView, TouchableOpacity, Keyboard} from 'react-native';
 import {Avatar, Card, useTheme, Text} from 'react-native-paper';
+import {connect} from 'react-redux';
 
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import CommonInput from '../../sharedComponents/commonInput';
@@ -14,11 +10,13 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import MenuLayout from '../../sharedComponents/menu';
 import styles from './style';
-import {updateObject} from '../../utils';
+import {displayResponse, updateObject} from '../../utils';
 import ButtonLayout from '../../sharedComponents/button';
+import InsideAuthApi from '../../services/inSideAuth';
 
 const SearchScreen = (props) => {
   const {colors} = useTheme();
+  const [userData, setUserData] = React.useState({});
   const [data, setData] = React.useState({
     controls: {
       input: {
@@ -57,14 +55,40 @@ const SearchScreen = (props) => {
     });
     setData(varVal);
   };
-  const onSearch = (x) => {
-    console.log(x);
+  const onSearch = () => {
+    let varVl;
+    // props.loader(true);
+    setUserData({});
+    InsideAuthApi()
+      .findUser(data.controls.input.value)
+      .then(async (res) => {
+        // props.loader(false);
+        displayResponse(res, true);
+        if (res.data) {
+          setUserData(res);
+        } else {
+          varVl = updateObject(data, {
+            controls: updateObject(data.controls, {
+              input: updateObject(data.controls.input, {
+                errors: res.message,
+              }),
+            }),
+          });
+          setData(varVl);
+        }
+      })
+      .catch((err) => {
+        // props.loader(false);
+        varVl = updateObject(data, {
+          controls: updateObject(data.controls, {
+            input: updateObject(data.controls.input, {
+              errors: err.message,
+            }),
+          }),
+        });
+        setData(varVl);
+      });
   };
-
-  const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
-    wait(2000).then(() => setRefreshing(false));
-  }, []);
 
   return (
     <ScrollView
@@ -94,35 +118,48 @@ const SearchScreen = (props) => {
             </View>
           </View>
           {data.controls.input.errors ? (
-            <Text style={{color: 'red'}}>{data.controls.input.errors}</Text>
-          ) : null}
-          <Text style={styles.bottomText}>Search Result</Text>
-          <TouchableOpacity
-            onPress={() => props.navigation.navigate('ChatScreen')}>
-            <Card.Title
-              title="Card Title"
-              subtitle="Card Subtitle"
-              onPress={() => Alert.alert('hi')}
-              left={() => <Avatar.Icon size={45} icon="folder" />}
-              right={() => (
-                <MenuLayout
-                  terget={
-                    <MaterialIcons
-                      name="dots-vertical"
-                      color={colors.iconColor}
-                      style={{marginRight: 5}}
-                      size={30}
+            <Text style={{color: 'red'}}>
+              {data.controls.input.errors}
+            </Text>
+          ) : userData.data !== undefined ? (
+            <React.Fragment>
+              <Text style={styles.bottomText}>Search Result</Text>
+              <TouchableOpacity
+                onPress={() => props.navigation.navigate('ChatScreen')}>
+                <Card.Title
+                  title={userData.data.name}
+                  subtitle={userData.data.email}
+                  onPress={() => Alert.alert('hi')}
+                  left={() => <Avatar.Icon size={45} source={userData.data.images.length > 0 ? userData.data.images : require('../../assets/images/user.jpeg')} />}
+                  right={() => (
+                    <MenuLayout
+                      terget={
+                        <MaterialIcons
+                          name="dots-vertical"
+                          color={colors.iconColor}
+                          style={{marginRight: 5}}
+                          size={30}
+                        />
+                      }
+                      menuOption={[
+                        {text: 'enter', function: () => alert(`Save`)},
+                      ]}
                     />
-                  }
-                  menuOption={[{text: 'enter', function: () => alert(`Save`)}]}
+                  )}
                 />
-              )}
-            />
-          </TouchableOpacity>
+              </TouchableOpacity>
+            </React.Fragment>
+          ) : null}
         </View>
       </View>
     </ScrollView>
   );
 };
 
-export default SearchScreen;
+const mapStateToProps = (state) => {
+  return {
+    loading: state.auth.loading,
+  };
+};
+
+export default connect(mapStateToProps, null)(SearchScreen);

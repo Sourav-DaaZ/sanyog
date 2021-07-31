@@ -11,6 +11,7 @@ export const API = {
       otpVerify: '/email_varification',
       registerUser: '/register_user',
       verifyUserName: '/check_username',
+      findUser: '/find_user',
   },
   authUrls: {
     // add the new api urls here which are inside the authentication
