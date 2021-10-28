@@ -1,10 +1,7 @@
 import React from 'react';
 import {View} from 'react-native';
-import {Text} from 'react-native-paper';
-import {
-  DrawerContentScrollView,
-  DrawerItem,
-} from '@react-navigation/drawer';
+import {connect} from 'react-redux';
+import {DrawerContentScrollView, DrawerItem} from '@react-navigation/drawer';
 import {
   useTheme,
   Avatar,
@@ -17,9 +14,10 @@ import {
 import {Drawer} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IonicIcon from 'react-native-vector-icons/Ionicons';
+import * as actions from '../../store/actions';
 import {styles} from './style';
 
-export const DrawerContent = (props) => {
+const DrawerContent = (props) => {
   const {colors} = useTheme();
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundColor}}>
@@ -35,7 +33,7 @@ export const DrawerContent = (props) => {
                 size={50}
               />
               <View style={{marginLeft: 15, flexDirection: 'column'}}>
-                <Title style={styles.title}>Sourav Das</Title>
+                <Title style={styles.title}>User</Title>
                 <Caption style={styles.caption}>DaaZ</Caption>
               </View>
             </View>
@@ -85,7 +83,7 @@ export const DrawerContent = (props) => {
             onPress={() => {}}
           />
         </Drawer.Section>
-        <Drawer.Section title="Prefarence">
+        {/* <Drawer.Section title="Prefarence">
           <TouchableRipple title={'Prefarence'}>
             <View style={styles.preference}>
               <Text>Dark Theme</Text>
@@ -94,7 +92,7 @@ export const DrawerContent = (props) => {
               </View>
             </View>
           </TouchableRipple>
-        </Drawer.Section>
+        </Drawer.Section> */}
       </DrawerContentScrollView>
       <Drawer.Section style={styles.bottomDraweeSection}>
         <DrawerItem
@@ -102,10 +100,21 @@ export const DrawerContent = (props) => {
             <Icon name={'exit-to-app'} color={color} size={size} />
           )}
           label="Sign Out"
-          onPress={() => {}}
+          onPress={() => {
+            props.updateAccessToken('');
+            // props.navigation.navigate('LoginScreen');
+          }}
         />
       </Drawer.Section>
       {/* <Text>hi</Text> */}
     </View>
   );
 };
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateAccessToken: (data) => dispatch(actions.accessTokenUpdate(data)),
+  };
+};
+
+export default connect(null, mapDispatchToProps)(DrawerContent);

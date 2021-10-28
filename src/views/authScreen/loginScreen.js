@@ -205,7 +205,6 @@ const LoginScreen = (props) => {
             props.updateAccessToken(res.data.access_token);
             props.updateRefreshToken(res.data.refresh_token);
             await _storeData('Token', res.data);
-            props.navigation.navigate('LandingScreen');
           })
           .catch((err) => {
             props.loader(false);

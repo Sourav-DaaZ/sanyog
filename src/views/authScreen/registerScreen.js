@@ -45,25 +45,6 @@ const RegisterScreen = (props) => {
           <Feather name="check-circle" color="green" size={20} />,
         ],
       },
-      user_name: {
-        elementType: 'input',
-        elementConfig: {
-          type: 'user_name',
-          text: 'User Name',
-          placeholder: 'Enter your user name',
-        },
-        value: '',
-        validation: {
-          required: true,
-        },
-        valid: false,
-        errors: '',
-        className: [],
-        icons: [
-          <FontAwesome name="user-o" color="#05375a" size={20} />,
-          <Feather name="check-circle" color="green" size={20} />,
-        ],
-      },
       email: {
         elementType: 'input',
         elementConfig: {
@@ -80,7 +61,7 @@ const RegisterScreen = (props) => {
         errors: '',
         className: [],
         icons: [
-          <FontAwesome name="user-o" color="#05375a" size={20} />,
+          <FontAwesome name="envelope-o" color="#05375a" size={20} />,
           <Feather name="check-circle" color="green" size={20} />,
         ],
       },
@@ -245,7 +226,6 @@ const RegisterScreen = (props) => {
             props.updateAccessToken(res.data.access_token);
             props.updateRefreshToken(res.data.refresh_token);
             await _storeData('Token', res.data);
-            props.navigation.navigate('LandingScreen');
           })
           .catch((err) => {
             props.loader(false);
@@ -336,8 +316,7 @@ const RegisterScreen = (props) => {
 
   return (
     <LoginLayout headerText="Register">
-      <View style={styles.inlineInput}>
-        <View style={{flex: 2}}>
+        <View style={styles.text_footer}>
           <Text style={styles.text_footer}>
             {data.controls.name.elementConfig.text}
           </Text>
@@ -355,26 +334,6 @@ const RegisterScreen = (props) => {
             <Text style={{color: 'red'}}>{data.controls.name.errors}</Text>
           ) : null}
         </View>
-        <View style={{flex: 2, marginLeft: 15}}>
-          <Text style={styles.text_footer}>
-            {data.controls.user_name.elementConfig.text}
-          </Text>
-          <CommonInput
-            placeholder={data.controls.user_name.elementConfig.placeholder}
-            onInputChange={onInputChange}
-            onSubmit={() => Keyboard.dismiss()}
-            value={data.controls.user_name.value}
-            type={data.controls.user_name.elementConfig.type}
-            isValid={data.controls.user_name.valid}
-            icons={data.controls.user_name.icons}
-            onBlur={onBlurFunc}
-            ele={data.controls.user_name.elementType}
-          />
-          {data.controls.user_name.errors ? (
-            <Text style={{color: 'red'}}>{data.controls.user_name.errors}</Text>
-          ) : null}
-        </View>
-      </View>
 
       <Text style={[styles.text_footer, {marginTop: 15}]}>
         {data.controls.email.elementConfig.text}
@@ -425,7 +384,7 @@ const RegisterScreen = (props) => {
         close={() => setVisible(false)}
         title="Verify OTP"
         onPress={onSubmit}
-        btnTxt="submit">
+        btnTxt="Submit">
         <OtpLayout
           resendOtp={resendOtp}
           onChange={onInputChange}

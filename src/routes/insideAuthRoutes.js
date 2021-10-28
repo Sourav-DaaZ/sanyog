@@ -5,7 +5,7 @@ import {Text, useTheme} from 'react-native-paper';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import {DrawerContent} from '../sharedComponents/drawer';
+import DrawerContent from '../sharedComponents/drawer';
 import {styles} from './style';
 import ChatScreen from '../views/chatScreen';
 import SearchScreen from '../views/searchScreen';
