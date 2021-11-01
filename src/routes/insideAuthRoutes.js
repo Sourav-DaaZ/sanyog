@@ -7,7 +7,9 @@ import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import DrawerContent from '../sharedComponents/drawer';
 import {styles} from './style';
-import ChatScreen from '../views/chatScreen';
+import TaskScreen from '../views/taskScreen';
+import CreatTaskScreen from '../views/createTask';
+import EditTaskScreen from '../views/editTask';
 import SearchScreen from '../views/searchScreen';
 import BackBtn from '../sharedComponents/backBtn';
 
@@ -41,24 +43,16 @@ const InsideAuthRoutes = () => {
               size={30}
               onPress={() => props.navigation.openDrawer()}
             />
-          ),
-          headerRight: () => (
-            <MaterialIcons
-              name="chat"
-              color={colors.backgroundColor}
-              style={{marginRight: 15}}
-              size={30}
-            />
-          ),
+          )
         })}
       />
       <RootStack.Screen
-        name="ChatScreen"
-        component={ChatScreen}
+        name="TaskScreen"
+        component={TaskScreen}
         options={() => ({
           headerTitle: () => (
             <Text style={[styles.headerText, {color: colors.backgroundColor}]}>
-              DaaZ
+              Task List
             </Text>
           ),
           headerStyle: {
@@ -74,6 +68,48 @@ const InsideAuthRoutes = () => {
       <RootStack.Screen
         name="SearchScreen"
         component={SearchScreen}
+        options={() => ({
+          headerTitle: () => (
+            <Text
+              style={[
+                styles.headerText,
+                {color: colors.backgroundColor},
+              ]}></Text>
+          ),
+          headerStyle: {
+            backgroundColor: colors.mainColor,
+            borderBottomWidth: 0,
+            shadowOpacity: 0,
+          },
+          headerLeft: () => (
+            <BackBtn onClick={() => props.navigation.goBack()} size={35} />
+          ),
+        })}
+      />
+      <RootStack.Screen
+        name="CreateTaskScreen"
+        component={CreatTaskScreen}
+        options={() => ({
+          headerTitle: () => (
+            <Text
+              style={[
+                styles.headerText,
+                {color: colors.backgroundColor},
+              ]}></Text>
+          ),
+          headerStyle: {
+            backgroundColor: colors.mainColor,
+            borderBottomWidth: 0,
+            shadowOpacity: 0,
+          },
+          headerLeft: () => (
+            <BackBtn onClick={() => props.navigation.goBack()} size={35} />
+          ),
+        })}
+      />
+      <RootStack.Screen
+        name="EditTaskScreen"
+        component={EditTaskScreen}
         options={() => ({
           headerTitle: () => (
             <Text

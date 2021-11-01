@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   buttonInput: {
-    width: '20%',
+    width: '100%',
   },
   inputField: {
     borderBottomWidth: 1,

@@ -4,6 +4,7 @@ import {updateObject} from '../../utils';
 const initialState = {
   access_token: null,
   refresh_token: null,
+  loading: false
 };
 
 const loading = (state, action) => {

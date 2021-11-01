@@ -22,6 +22,7 @@ const CommonInput = (props) => {
                 ? [styles.textInput, props.style[2]]
                 : styles.textInput
             }
+            keyboardType={props.keyNum?"numeric":null}
             onChangeText={(val) => props.onInputChange(val, props.type)}
             value={props.value}
             onBlur={() => props.onBlur?props.onBlur(props.type):null}

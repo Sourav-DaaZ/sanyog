@@ -16,15 +16,34 @@ import InsideAuthApi from '../../services/inSideAuth';
 
 const SearchScreen = (props) => {
   const {colors} = useTheme();
-  const [userData, setUserData] = React.useState({});
   const [data, setData] = React.useState({
     controls: {
       input: {
         elementType: 'input',
         elementConfig: {
           type: 'input',
-          text: 'Email',
-          placeholder: 'Enter your email',
+          text: 'Name',
+          placeholder: 'Enter project name',
+        },
+        value: '',
+        validation: {
+          required: true,
+          isEmail: true,
+        },
+        valid: false,
+        errors: '',
+        className: [],
+        icons: [
+          <FontAwesome name="user-o" color="#05375a" size={20} />,
+          <Feather name="check-circle" color="green" size={20} />,
+        ],
+      },
+      details: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'details',
+          text: 'Description',
+          placeholder: 'Enter project description',
         },
         value: '',
         validation: {
@@ -57,25 +76,16 @@ const SearchScreen = (props) => {
   };
   const onSearch = () => {
     let varVl;
-    // props.loader(true);
-    setUserData({});
-    InsideAuthApi()
-      .findUser(data.controls.input.value)
+    let datas = {
+      "name": data.controls.input.value,
+      "details": data.controls.details.value,
+    }
+    InsideAuthApi(props.token)
+      .CreateProject(datas)
       .then(async (res) => {
         // props.loader(false);
         displayResponse(res, true);
-        if (res.data) {
-          setUserData(res);
-        } else {
-          varVl = updateObject(data, {
-            controls: updateObject(data.controls, {
-              input: updateObject(data.controls.input, {
-                errors: res.message,
-              }),
-            }),
-          });
-          setData(varVl);
-        }
+        props.navigation.navigate('LandingScreen');
       })
       .catch((err) => {
         // props.loader(false);
@@ -96,59 +106,41 @@ const SearchScreen = (props) => {
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={{flex: 1}}>
       <View style={{flex: 1, justifyContent: 'center'}}>
-        <Text style={styles.headerText}>Search User</Text>
+        <Text style={styles.headerText}>Create Task</Text>
         <View style={styles.outerBox}>
-          <Text style={styles.text_footer}>Enter User Name</Text>
-          <View style={styles.inlineInput}>
-            <View style={styles.inputField}>
-              <CommonInput
-                placeholder={data.controls.input.elementConfig.placeholder}
-                onInputChange={onInputChange}
-                onSubmit={() => Keyboard.dismiss()}
-                value={data.controls.input.value}
-                type={data.controls.input.elementConfig.type}
-                isValid={data.controls.input.valid}
-                validation={data.controls.input.validation}
-                icons={data.controls.input.icons}
-                ele={data.controls.input.elementType}
-              />
-            </View>
-            <View style={styles.buttonInput}>
-              <ButtonLayout onPress={onSearch}>Search</ButtonLayout>
-            </View>
+          <Text style={styles.text_footer}>Enter Task Name</Text>
+          <View>
+            <CommonInput
+              placeholder={data.controls.input.elementConfig.placeholder}
+              onInputChange={onInputChange}
+              onSubmit={() => Keyboard.dismiss()}
+              value={data.controls.input.value}
+              type={data.controls.input.elementConfig.type}
+              isValid={data.controls.input.valid}
+              validation={data.controls.input.validation}
+              icons={data.controls.input.icons}
+              ele={data.controls.input.elementType}
+            />
+           </View>
+          <Text style={[styles.text_footer,{marginTop: 20}]}>Enter Task description</Text>
+          <View>
+            <CommonInput
+              placeholder={data.controls.details.elementConfig.placeholder}
+              onInputChange={onInputChange}
+              onSubmit={() => Keyboard.dismiss()}
+              value={data.controls.details.value}
+              type={data.controls.details.elementConfig.type}
+              isValid={data.controls.details.valid}
+              validation={data.controls.details.validation}
+              icons={data.controls.details.icons}
+              ele={data.controls.details.elementType}
+            />
+           </View>
+          <View style={[styles.buttonInput,{marginTop: 20}]}>
+            <ButtonLayout onPress={onSearch}>Create Project</ButtonLayout>
           </View>
           {data.controls.input.errors ? (
-            <Text style={{color: 'red'}}>
-              {data.controls.input.errors}
-            </Text>
-          ) : userData.data !== undefined ? (
-            <React.Fragment>
-              <Text style={styles.bottomText}>Search Result</Text>
-              <TouchableOpacity
-                onPress={() => props.navigation.navigate('ChatScreen')}>
-                <Card.Title
-                  title={userData.data.name}
-                  subtitle={userData.data.email}
-                  onPress={() => Alert.alert('hi')}
-                  left={() => <Avatar.Icon size={45} source={userData.data.images.length > 0 ? userData.data.images : require('../../assets/images/user.jpeg')} />}
-                  right={() => (
-                    <MenuLayout
-                      terget={
-                        <MaterialIcons
-                          name="dots-vertical"
-                          color={colors.iconColor}
-                          style={{marginRight: 5}}
-                          size={30}
-                        />
-                      }
-                      menuOption={[
-                        {text: 'enter', function: () => alert(`Save`)},
-                      ]}
-                    />
-                  )}
-                />
-              </TouchableOpacity>
-            </React.Fragment>
+            <Text style={{color: 'red'}}>{data.controls.input.errors}</Text>
           ) : null}
         </View>
       </View>
@@ -159,6 +151,7 @@ const SearchScreen = (props) => {
 const mapStateToProps = (state) => {
   return {
     loading: state.auth.loading,
+    token: state.auth.access_token,
   };
 };
 

@@ -27,8 +27,7 @@ const DashboardLayout = (props) => {
   };
 
   const [routes] = React.useState([
-    {key: 'groups', title: 'Groups'},
-    {key: 'second', title: 'Second'},
+    {key: 'groups', title: 'Projects'}
   ]);
   
   const renderScene = ({ route, jumpTo }) => {
