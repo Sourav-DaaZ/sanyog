@@ -44,15 +44,14 @@ const TaskScreen = (props) => {
         console.log(res);
         setData(res.data.data);
         setOwner(res.data.owner)
-        props.loader(false);
         displayResponse(res, true);
       })
       .catch((err) => {
-        props.loader(false);
+
         displayResponse(err.message);
       });
   };
-  console.log(props.route.params.owner, owner)
+  
   return (
     <React.Fragment>
       <ScrollView

@@ -44,11 +44,9 @@ const AllGroups = (props) => {
       .then((res) => {
         console.log(res);
         setData(res.data);
-        props.loader(false);
         displayResponse(res, true);
       })
       .catch((err) => {
-        props.loader(false);
         displayResponse(err.message);
       });
   };

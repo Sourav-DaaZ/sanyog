@@ -16,6 +16,9 @@ export const API = {
       createProject: '/create_project',
       createTask: '/create_task',
       editTask: '/edit_task',
+      assignTask: '/assign_task',
+      getTaskStatus: '/get_task_status',
+      getAssignedMembers: '/get_assigned_members',
   },
   authUrls: {
     // add the new api urls here which are inside the authentication
