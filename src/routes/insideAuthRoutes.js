@@ -27,7 +27,7 @@ const InsideAuthRoutes = () => {
         options={() => ({
           headerTitle: () => (
             <Text style={[styles.headerText, {color: colors.backgroundColor}]}>
-              Sanyog
+              Project Management
             </Text>
           ),
           headerStyle: {

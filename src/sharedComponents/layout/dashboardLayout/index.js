@@ -8,6 +8,7 @@ import {_retrieveData} from '../../../utils';
 import Geolocation from '@react-native-community/geolocation';
 import {useTheme, FAB} from 'react-native-paper';
 import AllGroups from '../../../views/allGroups'; 
+import TagScreen from '../../../views/tagScreen';
 
 const DashboardLayout = (props) => {
   const [user, setUser] = useState('');
@@ -27,13 +28,16 @@ const DashboardLayout = (props) => {
   };
 
   const [routes] = React.useState([
-    {key: 'groups', title: 'Projects'}
+    {key: 'groups', title: 'Projects'},
+    {key: 'task', title: 'Tag Tasks'}
   ]);
   
   const renderScene = ({ route, jumpTo }) => {
     switch (route.key) {
       case 'groups':
         return <AllGroups jumpTo={jumpTo} {...props} />;
+      case 'task':
+        return <TagScreen jumpTo={jumpTo} {...props} />;
     }
   };
 

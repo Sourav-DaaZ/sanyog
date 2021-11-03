@@ -370,7 +370,7 @@ const RegisterScreen = (props) => {
       ) : null}
 
       <View style={styles.button}>
-        <ButtonLayout onPress={onSubmit}>Sign in</ButtonLayout>
+        <ButtonLayout onPress={onSubmit}>Sign Up</ButtonLayout>
         <ButtonLayout
           onPress={() => {
             props.navigation.navigate('LoginScreen');

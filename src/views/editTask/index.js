@@ -170,6 +170,8 @@ const EditTaskScreen = (props) => {
       ...(data.controls.status.value.length > 0 && {
         status: data.controls.status.value,
       }),
+      ...(String(props.route.params.owner) !=
+        String(props.route.params.my_id) && {time: assignTime}),
       ...(data.controls.details.value.length > 1 && {
         details: data.controls.details.value,
       }),
@@ -305,9 +307,9 @@ const EditTaskScreen = (props) => {
               Parent Task: {data.controls.task.value}
             </Text>
           )}
-          <Text style={[styles.text_footer, {marginTop: 20}]}>
+          {Number(props.route.params.parentTask) !== 0?<Text style={[styles.text_footer, {marginTop: 20}]}>
             Parent Task Status: {status}
-          </Text>
+          </Text>:null}
           <Text style={[styles.text_footer, {marginTop: 20}]}>Task Status</Text>
           <View>
             <CommonInput
@@ -427,8 +429,9 @@ const EditTaskScreen = (props) => {
                     </View>
                   </View>
                   <View style={{marginTop: 20}}>
-                    {assignMenbers.map((x) => (
+                    {assignMenbers.map((x, index) => (
                       <Card.Title
+                        key={index}
                         title={x.user.email}
                         subtitle={
                           'Time:' +
@@ -459,9 +462,12 @@ const EditTaskScreen = (props) => {
                 </ModalLayout>
               </React.Fragment>
             ) : null}
-            {(String(props.route.params.owner) ==
-            String(props.route.params.my_id) || (String(props.route.params.owner) !=
-            String(props.route.params.my_id) && status == 'complete') ) ? (
+            {String(props.route.params.owner) ==
+              String(props.route.params.my_id) ||
+            (String(props.route.params.owner) !=
+              String(props.route.params.my_id) &&
+              (status == 'complete' ||
+                Number(props.route.params.parentTask) == 0)) ? (
               <ButtonLayout onPress={onSearch} style={{width: '48%'}}>
                 Save Task
               </ButtonLayout>

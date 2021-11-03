@@ -13,6 +13,7 @@ export const API = {
       verifyUserName: '/check_username',
       allProject: '/all_project',
       allTask: '/all_task',
+      getTagTask: '/get_tag_task',
       createProject: '/create_project',
       createTask: '/create_task',
       editTask: '/edit_task',

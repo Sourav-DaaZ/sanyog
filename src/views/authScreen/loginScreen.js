@@ -315,7 +315,7 @@ const LoginScreen = (props) => {
             props.navigation.navigate('RegisterScreen');
           }}
           outline>
-          Sign in
+          Sign Up
         </ButtonLayout>
       </View>
       <ModalLayout

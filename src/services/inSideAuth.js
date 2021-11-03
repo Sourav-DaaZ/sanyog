@@ -71,6 +71,13 @@ const InsideAuthApi = (token) => {
         headers: {...defaultHeaders},
       });
     },
+    GetTagTask() {
+      return axiosObj({
+        url: API.noAuthUrls.getTagTask,
+        method: 'GET',
+        headers: {...defaultHeaders},
+      });
+    },
   };
 };
 

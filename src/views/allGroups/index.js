@@ -31,6 +31,9 @@ const AllGroups = (props) => {
   }, []);
 
   React.useEffect(() => {
+    apiCall();
+  },[])
+  React.useEffect(() => {
     const unsubscribe = props.navigation.addListener('focus', () => {
       apiCall();
     });
@@ -42,7 +45,6 @@ const AllGroups = (props) => {
     InsideAuthApi(props.token)
       .AllProject()
       .then((res) => {
-        console.log(res);
         setData(res.data);
         displayResponse(res, true);
       })
