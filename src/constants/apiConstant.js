@@ -1,7 +1,7 @@
 export const API = {
   currentEnv: 'dev', //   api server environment : <dev/qa/prod>
   baseUrls: {
-    dev: 'http://localhost:5000/api',
+    dev: 'https://project-management-system-app.herokuapp.com/api',
     qa: '',
     uat: '',
     prod: '',
