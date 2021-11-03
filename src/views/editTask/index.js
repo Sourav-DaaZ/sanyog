@@ -459,9 +459,15 @@ const EditTaskScreen = (props) => {
                 </ModalLayout>
               </React.Fragment>
             ) : null}
-            <ButtonLayout onPress={onSearch} style={{width: '48%'}}>
-              Save Task
-            </ButtonLayout>
+            {(String(props.route.params.owner) ==
+            String(props.route.params.my_id) || (String(props.route.params.owner) !=
+            String(props.route.params.my_id) && status == 'complete') ) ? (
+              <ButtonLayout onPress={onSearch} style={{width: '48%'}}>
+                Save Task
+              </ButtonLayout>
+            ) : (
+              <Text>Parent Task is not complete, So You can't update it</Text>
+            )}
           </View>
         </View>
       </View>
