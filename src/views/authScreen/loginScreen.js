@@ -202,9 +202,10 @@ const LoginScreen = (props) => {
             props.loader(false);
             displayResponse(res, true);
             setVisible(false);
-            props.updateAccessToken(res.data.access_token);
-            props.updateRefreshToken(res.data.refresh_token);
-            await _storeData('Token', res.data);
+            props.updateAccessToken(res.data.token.access_token);
+            props.updateRefreshToken(res.data.token.refresh_token);
+            await _storeData('Token', res.data.token);
+            await _storeData('UserType', res.data.type);
           })
           .catch((err) => {
             props.loader(false);

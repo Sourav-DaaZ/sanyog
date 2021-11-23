@@ -1,10 +1,10 @@
 import {Button, View} from 'native-base';
 import * as React from 'react';
-import {Alert, ScrollView, TouchableOpacity, Keyboard} from 'react-native';
-import {Avatar, Card, useTheme, Text} from 'react-native-paper';
+import {ScrollView, Keyboard} from 'react-native';
+import {useTheme, Text} from 'react-native-paper';
 import {connect} from 'react-redux';
 
-import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import * as actions from '../../store/actions';
 import CommonInput from '../../sharedComponents/commonInput';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
@@ -98,7 +98,7 @@ const CreatTaskScreen = (props) => {
     setData(varVal);
   };
   const onSearch = () => {
-    console.log(data.controls.task.value, data.controls.task.value.length)
+    props.loader(true);
     let datas = {
       project_id: props.route.params.projectId,
       name: data.controls.input.value,
@@ -114,10 +114,12 @@ const CreatTaskScreen = (props) => {
     InsideAuthApi(props.token)
       .CreateTask(datas)
       .then(async (res) => {
+        props.loader(false);
         displayResponse(res, true);
         props.navigation.goBack();
       })
       .catch((err) => {
+        props.loader(false);
         displayResponse(err.message);
       });
   };
@@ -223,4 +225,10 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, null)(CreatTaskScreen);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    loader: (val) => dispatch(actions.loading(val))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CreatTaskScreen);

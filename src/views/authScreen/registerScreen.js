@@ -45,6 +45,25 @@ const RegisterScreen = (props) => {
           <Feather name="check-circle" color="green" size={20} />,
         ],
       },
+      jobTitle: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'jobTitle',
+          text: 'Job Title',
+          placeholder: 'Enter job Title',
+        },
+        value: '',
+        validation: {
+          required: true,
+        },
+        valid: false,
+        errors: '',
+        className: [],
+        icons: [
+          <FontAwesome name="user-o" color="#05375a" size={20} />,
+          <Feather name="check-circle" color="green" size={20} />,
+        ],
+      },
       email: {
         elementType: 'input',
         elementConfig: {
@@ -70,6 +89,26 @@ const RegisterScreen = (props) => {
         elementConfig: {
           type: 'password',
           text: 'Password',
+          placeholder: 'Enter your password',
+        },
+        value: '',
+        validation: {
+          required: true,
+          isEmail: true,
+        },
+        errors: '',
+        valid: false,
+        className: [],
+        icons: [
+          <FontAwesome name="lock" color="#05375a" size={20} />,
+          <Feather name={'eye-off'} color="gray" size={20} />,
+        ],
+      },
+      adminPassword: {
+        elementType: 'password',
+        elementConfig: {
+          type: 'adminPassword',
+          text: 'Admin Password',
           placeholder: 'Enter your password',
         },
         value: '',
@@ -223,9 +262,10 @@ const RegisterScreen = (props) => {
             props.loader(false);
             displayResponse(res, true);
             setVisible(false);
-            props.updateAccessToken(res.data.access_token);
-            props.updateRefreshToken(res.data.refresh_token);
-            await _storeData('Token', res.data);
+            // props.updateAccessToken(res.data.access_token);
+            // props.updateRefreshToken(res.data.refresh_token);
+            // await _storeData('Token', res.data);
+            props.navigation.navigate('LoginScreen');
           })
           .catch((err) => {
             props.loader(false);
@@ -315,7 +355,7 @@ const RegisterScreen = (props) => {
   };
 
   return (
-    <LoginLayout headerText="Register">
+    <LoginLayout headerText="Register" layout={true}>
         <View style={styles.text_footer}>
           <Text style={styles.text_footer}>
             {data.controls.name.elementConfig.text}
@@ -335,6 +375,22 @@ const RegisterScreen = (props) => {
           ) : null}
         </View>
 
+      <Text style={[styles.text_footer, {marginTop: 15}]}>
+        {data.controls.jobTitle.elementConfig.text}
+      </Text>
+      <CommonInput
+        placeholder={data.controls.jobTitle.elementConfig.placeholder}
+        onInputChange={onInputChange}
+        onSubmit={() => Keyboard.dismiss()}
+        value={data.controls.jobTitle.value}
+        type={data.controls.jobTitle.elementConfig.type}
+        isValid={data.controls.jobTitle.valid}
+        icons={data.controls.jobTitle.icons}
+        ele={data.controls.jobTitle.elementType}
+      />
+      {data.controls.jobTitle.errors ? (
+        <Text style={{color: 'red'}}>{data.controls.jobTitle.errors}</Text>
+      ) : null}
       <Text style={[styles.text_footer, {marginTop: 15}]}>
         {data.controls.email.elementConfig.text}
       </Text>
@@ -367,6 +423,23 @@ const RegisterScreen = (props) => {
       />
       {data.controls.password.errors ? (
         <Text style={{color: 'red'}}>{data.controls.password.errors}</Text>
+      ) : null}
+      
+      <Text style={[styles.text_footer, {marginTop: 15}]}>
+        {data.controls.adminPassword.elementConfig.text}
+      </Text>
+      <CommonInput
+        placeholder={data.controls.adminPassword.elementConfig.placeholder}
+        onInputChange={onInputChange}
+        onSubmit={() => Keyboard.dismiss()}
+        value={data.controls.adminPassword.value}
+        type={data.controls.adminPassword.elementConfig.type}
+        isValid={data.controls.adminPassword.valid}
+        icons={data.controls.adminPassword.icons}
+        ele={data.controls.adminPassword.elementType}
+      />
+      {data.controls.adminPassword.errors ? (
+        <Text style={{color: 'red'}}>{data.controls.adminPassword.errors}</Text>
       ) : null}
 
       <View style={styles.button}>

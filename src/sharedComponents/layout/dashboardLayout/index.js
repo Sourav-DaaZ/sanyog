@@ -12,6 +12,7 @@ import TagScreen from '../../../views/tagScreen';
 
 const DashboardLayout = (props) => {
   const [user, setUser] = useState('');
+  const [type, setType] = useState('');
   const layout = useWindowDimensions();
   const [index, setIndex] = React.useState(0);
   const {colors} = useTheme();
@@ -24,7 +25,9 @@ const DashboardLayout = (props) => {
 
   const fetchUser = async () => {
     const userData = await _retrieveData('Token');
+    const userType = await _retrieveData('UserType');
     setUser(userData);
+    setType(userType);
   };
 
   const [routes] = React.useState([
@@ -40,7 +43,7 @@ const DashboardLayout = (props) => {
         return <TagScreen jumpTo={jumpTo} {...props} />;
     }
   };
-
+  
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={colors.mainColor} barStyle="light-content" />
@@ -68,6 +71,7 @@ const DashboardLayout = (props) => {
         )}
         initialLayout={{width: layout.width}}
       />
+      {type === '"admin"'?
       <FAB
         style={{
           position: 'absolute',
@@ -78,7 +82,7 @@ const DashboardLayout = (props) => {
         }}
         icon="plus"
         onPress={() => props.navigation.navigate('SearchScreen')}
-      />
+      />:null}
     </View>
   );
 };

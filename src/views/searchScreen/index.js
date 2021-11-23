@@ -10,6 +10,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import MenuLayout from '../../sharedComponents/menu';
 import styles from './style';
+import * as actions from '../../store/actions';
 import {displayResponse, updateObject} from '../../utils';
 import ButtonLayout from '../../sharedComponents/button';
 import InsideAuthApi from '../../services/inSideAuth';
@@ -75,6 +76,7 @@ const SearchScreen = (props) => {
     setData(varVal);
   };
   const onSearch = () => {
+    props.loader(true);
     let varVl;
     let datas = {
       "name": data.controls.input.value,
@@ -83,12 +85,12 @@ const SearchScreen = (props) => {
     InsideAuthApi(props.token)
       .CreateProject(datas)
       .then(async (res) => {
-        // props.loader(false);
+        props.loader(false);
         displayResponse(res, true);
         props.navigation.navigate('LandingScreen');
       })
       .catch((err) => {
-        // props.loader(false);
+        props.loader(false);
         varVl = updateObject(data, {
           controls: updateObject(data.controls, {
             input: updateObject(data.controls.input, {
@@ -106,9 +108,9 @@ const SearchScreen = (props) => {
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={{flex: 1}}>
       <View style={{flex: 1, justifyContent: 'center'}}>
-        <Text style={styles.headerText}>Create Task</Text>
+        <Text style={styles.headerText}>Create Project</Text>
         <View style={styles.outerBox}>
-          <Text style={styles.text_footer}>Enter Task Name</Text>
+          <Text style={styles.text_footer}>Enter Project Name</Text>
           <View>
             <CommonInput
               placeholder={data.controls.input.elementConfig.placeholder}
@@ -122,7 +124,7 @@ const SearchScreen = (props) => {
               ele={data.controls.input.elementType}
             />
            </View>
-          <Text style={[styles.text_footer,{marginTop: 20}]}>Enter Task description</Text>
+          <Text style={[styles.text_footer,{marginTop: 20}]}>Enter Project description</Text>
           <View>
             <CommonInput
               placeholder={data.controls.details.elementConfig.placeholder}
@@ -154,5 +156,9 @@ const mapStateToProps = (state) => {
     token: state.auth.access_token,
   };
 };
-
-export default connect(mapStateToProps, null)(SearchScreen);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    loader: (val) => dispatch(actions.loading(val))
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(SearchScreen);

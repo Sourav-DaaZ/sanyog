@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
   },
   bigHeader: {
-    flex: 2,
+    flex: .2,
     justifyContent: 'center',
     alignItems: 'center',
   },

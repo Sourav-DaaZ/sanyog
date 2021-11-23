@@ -94,4 +94,5 @@ const mapStateToProps = (state) => {
     token: state.auth.access_token,
   };
 };
+
 export default connect(mapStateToProps, null)(AllGroups);

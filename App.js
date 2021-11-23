@@ -18,6 +18,9 @@ import {API} from './src/constants/apiConstant';
 import {Root} from 'native-base';
 import {MenuProvider} from 'react-native-popup-menu';
 
+import 'intl';
+import 'intl/locale-data/jsonp/en';
+
 if (API.currentEnv !== 'prod') {
   GLOBAL.XMLHttpRequest =
     GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest;
