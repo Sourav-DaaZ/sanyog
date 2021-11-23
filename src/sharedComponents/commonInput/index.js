@@ -65,7 +65,7 @@ const CommonInput = (props) => {
         <Picker
           note
           mode="dropdown"
-          style={{width: '100%', height: 30}}
+          style={{width: '100%', height: 60}}
           selectedValue={props.value}
           onValueChange={(val) => props.onSelect(val, props.type)}>
           <Picker.Item label={props.placeholder} value="" disabled />
