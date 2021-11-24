@@ -50,6 +50,14 @@ const InsideAuthApi = (token) => {
         data: data,
       });
     },
+    AssignProject(data) {
+      return axiosObj({
+        url: API.noAuthUrls.assignProject,
+        method: 'POST',
+        headers: {...defaultHeaders},
+        data: data,
+      });
+    },
     GetTaskStatus(data) {
       return axiosObj({
         url: API.noAuthUrls.getTaskStatus + '?task_id=' + data,

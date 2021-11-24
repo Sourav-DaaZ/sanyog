@@ -19,6 +19,7 @@ export const API = {
       createTask: '/create_task',
       editTask: '/edit_task',
       assignTask: '/assign_task',
+      assignProject: '/assign_project',
       getTaskStatus: '/get_task_status',
       getAssignedMembers: '/get_assigned_members',
   },

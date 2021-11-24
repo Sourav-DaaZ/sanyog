@@ -10,6 +10,7 @@ import {Avatar, Card, FAB, useTheme, Text} from 'react-native-paper';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import InsideAuthApi from '../../services/inSideAuth';
 import {connect} from 'react-redux';
+import {_retrieveData} from '../../utils';
 import CommonInput from '../../sharedComponents/commonInput';
 import {displayResponse} from '../../utils';
 import ButtonLayout from '../../sharedComponents/button';
@@ -21,8 +22,8 @@ const TaskScreen = (props) => {
   const [data, setData] = React.useState([]);
   const [owner, setOwner] = React.useState([]);
   const [assignMenber, setAssignMenber] = React.useState('');
-  const [assignMenbers, setAssignMenbers] = React.useState([]);
   const [visible, setVisible] = React.useState(false);
+  const [type, setType] = React.useState('');
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -44,6 +45,14 @@ const TaskScreen = (props) => {
     return unsubscribe;
   }, [props.navigation]);
 
+  React.useEffect( ()=>{
+    fetchUser();
+  },[])
+  const fetchUser = async () => {
+    const userType = await _retrieveData('UserType');
+    setType(userType);
+  };
+
   const apiCall = () => {
     InsideAuthApi(props.token)
       .AllTask(props.route.params.projectId)
@@ -60,21 +69,22 @@ const TaskScreen = (props) => {
 
   const onAssign = (val) => {
     let datas = {
-      projectId: '',
-      email: assignMenber
+      project_id: props.route.params.projectId,
+      email: val === false? assignMenber: val,
+      deleteUser: val === false?false:true,
     };
     InsideAuthApi(props.token)
-      .AssignTask(datas)
+      .AssignProject(datas)
       .then(async (res) => {
         displayResponse(res, true);
         setVisible(false);
+        props.navigation.goBack();        
       })
       .catch((err) => {
         displayResponse(err.message);
         setVisible(false);
       });
   };
-
 
   return (
     <React.Fragment>
@@ -118,18 +128,10 @@ const TaskScreen = (props) => {
             </View>
           </View>
           <View style={{marginTop: 20}}>
-            {assignMenbers.map((x, index) => (
+            {props.route.params.projectAssigned.map((x, index) => (
               <Card.Title
                 key={index}
                 title={x.user.email}
-                subtitle={
-                  'Time:' +
-                  x.time +
-                  ', Cost:' +
-                  x.cost +
-                  ' Total:' +
-                  Number(x.time) * Number(x.cost)
-                }
                 left={() => (
                   <Avatar.Text
                     size={45}
@@ -171,6 +173,7 @@ const TaskScreen = (props) => {
             <Card.Title
               title={x.name}
               subtitle={x.details}
+              style={{backgroundColor: new Date(x.end_date) < new Date()  ? '#F08080' : ''}}
               left={() => (
                 <Avatar.Text
                   size={45}
@@ -195,7 +198,7 @@ const TaskScreen = (props) => {
           </TouchableOpacity>
         ))}
       </ScrollView>
-      {String(owner) == String(props.route.params.owner) ? (
+      {type === '"admin"' ? (
         <FAB
           style={{
             position: 'absolute',

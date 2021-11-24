@@ -254,11 +254,12 @@ const AllGroups = (props) => {
             props.navigation.navigate('TaskScreen', {
               projectId: x._id,
               owner: x.owner,
+              projectAssigned: x.projectAssigned
             })
           }>
           <Card.Title
             title={x?.name}
-            style={{backgroundColor: dateExp[index] ? '#F08080' : 'white'}}
+            style={{backgroundColor: dateExp[index] ? '#F08080' : ''}}
             right={() => (
               <Text style={{marginRight: 10}}>
                 <Text>Cost: {cost[index]}</Text>
