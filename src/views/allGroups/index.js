@@ -219,6 +219,7 @@ const AllGroups = (props) => {
     });
     setShort(varVal);
   };
+  
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -257,9 +258,9 @@ const AllGroups = (props) => {
               projectAssigned: x.projectAssigned
             })
           }>
-          <Card.Title
-            title={x?.name}
-            style={{backgroundColor: dateExp[index] ? '#F08080' : ''}}
+          {dateExp[index]?<Card.Title
+            title={x.name}
+            style={{backgroundColor: dateExp[index]? '#F08080' : ''}}
             right={() => (
               <Text style={{marginRight: 10}}>
                 <Text>Cost: {cost[index]}</Text>
@@ -274,20 +275,25 @@ const AllGroups = (props) => {
                 style={{paddingBottom: 5}}
               />
             )}
-            // right={() => (
-            //   <MenuLayout
-            //     terget={
-            //       <MaterialIcons
-            //         name="dots-vertical"
-            //         color={colors.iconColor}
-            //         style={{marginRight: 5}}
-            //         size={30}
-            //       />
-            //     }
-            //     menuOption={[{text: 'enter', function: () => alert(`Save`)}]}
-            //   />
-            // )}
-          />
+          />:
+          <Card.Title
+            title={x.name}
+            // style={{backgroundColor: dateExp[index]? '#F08080' : ''}}
+            right={() => (
+              <Text style={{marginRight: 10}}>
+                <Text>Cost: {cost[index]}</Text>
+                <Text> Status: {task[index] ? task[index] : 'created'}</Text>
+              </Text>
+            )}
+            subtitle={x?.details}
+            left={() => (
+              <Avatar.Text
+                size={45}
+                label={x?.name.charAt(0)}
+                style={{paddingBottom: 5}}
+              />
+            )}
+          />}
         </TouchableOpacity>
       ))}
     </ScrollView>
