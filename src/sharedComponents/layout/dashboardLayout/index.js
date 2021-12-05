@@ -5,10 +5,9 @@ import styles from './style';
 import {connect} from 'react-redux';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import {_retrieveData} from '../../../utils';
-import Geolocation from '@react-native-community/geolocation';
+import Loader from '../../loader';
 import {useTheme, FAB} from 'react-native-paper';
 import AllGroups from '../../../views/allGroups'; 
-import TagScreen from '../../../views/tagScreen';
 
 const DashboardLayout = (props) => {
   const [user, setUser] = useState('');
@@ -25,28 +24,27 @@ const DashboardLayout = (props) => {
 
   const fetchUser = async () => {
     const userData = await _retrieveData('Token');
-    const userType = await _retrieveData('UserType');
+    const userType = await _retrieveData('User');
     setUser(userData);
-    setType(userType);
+    setType(userType.type);
   };
 
   const [routes] = React.useState([
-    {key: 'groups', title: 'Projects'},
-    {key: 'task', title: 'Tag Tasks'}
+    {key: 'groups', title: 'Dashboard'},
+    // {key: 'task', title: 'Play List'}
   ]);
   
   const renderScene = ({ route, jumpTo }) => {
     switch (route.key) {
       case 'groups':
         return <AllGroups jumpTo={jumpTo} {...props} />;
-      case 'task':
-        return <TagScreen jumpTo={jumpTo} {...props} />;
     }
   };
   
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={colors.mainColor} barStyle="light-content" />
+      <Loader loading={props.loading} />
       <TabView
         lazy={true}
         indicatorStyle={{backgroundColor: colors.backgroundColor}}
@@ -81,7 +79,7 @@ const DashboardLayout = (props) => {
           backgroundColor: colors.mainColor,
         }}
         icon="plus"
-        onPress={() => props.navigation.navigate('SearchScreen')}
+        onPress={() => props.navigation.navigate('')}
       />:null}
     </View>
   );

@@ -11,81 +11,42 @@ const InsideAuthApi = (token) => {
   };
 
   return {
-    AllProject() {
+    UserData() {
       return axiosObj({
-        url: API.noAuthUrls.allProject,
+        url: API.noAuthUrls.userData,
         method: 'GET',
         headers: {...defaultHeaders},
       });
     },
-    CreateProject(data) {
+    GetTrainer() {
       return axiosObj({
-        url: API.noAuthUrls.createProject,
+        url: API.noAuthUrls.getTrainer,
+        method: 'GET',
+        headers: {...defaultHeaders},
+      });
+    },
+    GetTraining() {
+      return axiosObj({
+        url: API.noAuthUrls.getTraining,
+        method: 'GET',
+        headers: {...defaultHeaders},
+      });
+    },
+    RegularUpdate(data) {
+      return axiosObj({
+        url: API.noAuthUrls.regularUpdate,
         method: 'POST',
         headers: {...defaultHeaders},
         data: data,
       });
     },
-    CreateTask(data) {
+    GetChats() {
       return axiosObj({
-        url: API.noAuthUrls.createTask,
-        method: 'POST',
-        headers: {...defaultHeaders},
-        data: data,
-      });
-    },
-    EditTask(data) {
-      return axiosObj({
-        url: API.noAuthUrls.editTask,
-        method: 'PATCH',
-        headers: {...defaultHeaders},
-        data: data,
-      });
-    },
-    AssignTask(data) {
-      return axiosObj({
-        url: API.noAuthUrls.assignTask,
-        method: 'POST',
-        headers: {...defaultHeaders},
-        data: data,
-      });
-    },
-    AssignProject(data) {
-      return axiosObj({
-        url: API.noAuthUrls.assignProject,
-        method: 'POST',
-        headers: {...defaultHeaders},
-        data: data,
-      });
-    },
-    GetTaskStatus(data) {
-      return axiosObj({
-        url: API.noAuthUrls.getTaskStatus + '?task_id=' + data,
+        url: API.noAuthUrls.getChats,
         method: 'GET',
         headers: {...defaultHeaders},
       });
-    },
-    GetAssignedMembers(data) {
-      return axiosObj({
-        url: API.noAuthUrls.getAssignedMembers + '?id=' + data,
-        method: 'GET',
-        headers: {...defaultHeaders},
-      });
-    },
-    AllTask(data) {
-      return axiosObj({
-        url: API.noAuthUrls.allTask + '?project_id=' + data,
-        method: 'GET',
-        headers: {...defaultHeaders},
-      });
-    },
-    GetTagTask() {
-      return axiosObj({
-        url: API.noAuthUrls.getTagTask,
-        method: 'GET',
-        headers: {...defaultHeaders},
-      });
-    },
+    }
   };
 };
 

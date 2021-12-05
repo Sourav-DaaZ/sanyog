@@ -7,10 +7,14 @@ import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import DrawerContent from '../sharedComponents/drawer';
 import {styles} from './style';
-import TaskScreen from '../views/taskScreen';
-import CreatTaskScreen from '../views/createTask';
-import EditTaskScreen from '../views/editTask';
+import EditRegularUpdate from '../views/editRegularUpdate';
+import ChatScreen from '../views/chatScreen';
+import TrainnerScreen from '../views/trainner';
+import AllChatScreen from '../views/allChatScreen';
+import VideoScreen from '../views/videoScreen';
 import SearchScreen from '../views/searchScreen';
+import CreateTrainer from '../views/createTrainer';
+import CreateTraining from '../views/createTraining';
 import BackBtn from '../sharedComponents/backBtn';
 
 const RootStack = createStackNavigator();
@@ -27,7 +31,7 @@ const InsideAuthRoutes = () => {
         options={() => ({
           headerTitle: () => (
             <Text style={[styles.headerText, {color: colors.backgroundColor}]}>
-              Project Management
+              GETFIT
             </Text>
           ),
           headerStyle: {
@@ -43,26 +47,15 @@ const InsideAuthRoutes = () => {
               size={30}
               onPress={() => props.navigation.openDrawer()}
             />
+          ),
+          headerRight: () => (
+            <MaterialIcons 
+              name = 'chat'
+              color={colors.backgroundColor}
+              style={{marginRight: 15}}
+              size={30}
+              onPress={()=>props.navigation.navigate('ChatScreen')} />
           )
-        })}
-      />
-      <RootStack.Screen
-        name="TaskScreen"
-        component={TaskScreen}
-        options={() => ({
-          headerTitle: () => (
-            <Text style={[styles.headerText, {color: colors.backgroundColor}]}>
-              Task List
-            </Text>
-          ),
-          headerStyle: {
-            backgroundColor: colors.mainColor,
-            borderBottomWidth: 0,
-            shadowOpacity: 0,
-          },
-          headerLeft: () => (
-            <BackBtn onClick={() => props.navigation.goBack()} size={35} />
-          ),
         })}
       />
       <RootStack.Screen
@@ -87,15 +80,15 @@ const InsideAuthRoutes = () => {
         })}
       />
       <RootStack.Screen
-        name="CreateTaskScreen"
-        component={CreatTaskScreen}
+        name="TrainnerScreen"
+        component={TrainnerScreen}
         options={() => ({
           headerTitle: () => (
             <Text
               style={[
                 styles.headerText,
                 {color: colors.backgroundColor},
-              ]}></Text>
+              ]}>Trainner</Text>
           ),
           headerStyle: {
             backgroundColor: colors.mainColor,
@@ -108,15 +101,120 @@ const InsideAuthRoutes = () => {
         })}
       />
       <RootStack.Screen
-        name="EditTaskScreen"
-        component={EditTaskScreen}
+        name="VideoScreen"
+        component={VideoScreen}
         options={() => ({
           headerTitle: () => (
             <Text
               style={[
                 styles.headerText,
                 {color: colors.backgroundColor},
-              ]}></Text>
+              ]}>Video</Text>
+          ),
+          headerStyle: {
+            backgroundColor: colors.mainColor,
+            borderBottomWidth: 0,
+            shadowOpacity: 0,
+          },
+          headerLeft: () => (
+            <BackBtn onClick={() => props.navigation.goBack()} size={35} />
+          ),
+        })}
+      />
+      <RootStack.Screen
+        name="RegularUpdate"
+        component={EditRegularUpdate}
+        options={() => ({
+          headerTitle: () => (
+            <Text
+              style={[
+                styles.headerText,
+                {color: colors.backgroundColor},
+              ]}>Info Update</Text>
+          ),
+          headerStyle: {
+            backgroundColor: colors.mainColor,
+            borderBottomWidth: 0,
+            shadowOpacity: 0,
+          },
+          headerLeft: () => (
+            <BackBtn onClick={() => props.navigation.goBack()} size={35} />
+          ),
+        })}
+      />
+      <RootStack.Screen
+        name="AllChatScreen"
+        component={AllChatScreen}
+        options={() => ({
+          headerTitle: () => (
+            <Text
+              style={[
+                styles.headerText,
+                {color: colors.backgroundColor},
+              ]}>Chats</Text>
+          ),
+          headerStyle: {
+            backgroundColor: colors.mainColor,
+            borderBottomWidth: 0,
+            shadowOpacity: 0,
+          },
+          headerLeft: () => (
+            <BackBtn onClick={() => props.navigation.goBack()} size={35} />
+          ),
+        })}
+      />
+      <RootStack.Screen
+        name="ChatScreen"
+        component={ChatScreen}
+        options={() => ({
+          headerTitle: () => (
+            <Text
+              style={[
+                styles.headerText,
+                {color: colors.backgroundColor},
+              ]}>Admin</Text>
+          ),
+          headerStyle: {
+            backgroundColor: colors.mainColor,
+            borderBottomWidth: 0,
+            shadowOpacity: 0,
+          },
+          headerLeft: () => (
+            <BackBtn onClick={() => props.navigation.goBack()} size={35} />
+          ),
+        })}
+      />
+      <RootStack.Screen
+        name="CreateTraining"
+        component={CreateTraining}
+        options={() => ({
+          headerTitle: () => (
+            <Text
+              style={[
+                styles.headerText,
+                {color: colors.backgroundColor},
+              ]}>Add Video</Text>
+          ),
+          headerStyle: {
+            backgroundColor: colors.mainColor,
+            borderBottomWidth: 0,
+            shadowOpacity: 0,
+          },
+          headerLeft: () => (
+            <BackBtn onClick={() => props.navigation.goBack()} size={35} />
+          ),
+        })}
+      />
+      <RootStack.Screen
+        name="CreateTrainer"
+        component={CreateTrainer}
+        options={() => ({
+          headerTitle: () => (
+            <Text
+              style={[
+                styles.headerText,
+                {color: colors.backgroundColor},
+              ]}>Add Trainer</Text>
           ),
           headerStyle: {
             backgroundColor: colors.mainColor,

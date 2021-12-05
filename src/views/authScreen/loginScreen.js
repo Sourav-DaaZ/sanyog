@@ -205,7 +205,7 @@ const LoginScreen = (props) => {
             props.updateAccessToken(res.data.token.access_token);
             props.updateRefreshToken(res.data.token.refresh_token);
             await _storeData('Token', res.data.token);
-            await _storeData('UserType', res.data.type);
+            await _storeData('User', res.data.user);
           })
           .catch((err) => {
             props.loader(false);

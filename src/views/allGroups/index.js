@@ -1,51 +1,32 @@
 import * as React from 'react';
 import {
-  Alert,
+  Dimensions,
   ScrollView,
   TouchableOpacity,
   RefreshControl,
 } from 'react-native';
-import {Avatar, Card, useTheme, Text} from 'react-native-paper';
+import {
+  Card,
+  Title,
+  Paragraph,
+  useTheme,
+  Avatar,
+  Button,
+} from 'react-native-paper';
+import Video from 'react-native-video';
+import ButtonLayout from '../../sharedComponents/button';
 import InsideAuthApi from '../../services/inSideAuth';
 import {connect} from 'react-redux';
-import CommonInput from '../../sharedComponents/commonInput';
-import {updateObject} from '../../utils';
 
-import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import MenuLayout from '../../sharedComponents/menu';
 import {displayResponse} from '../../utils';
+import {View} from 'native-base';
 
 const AllGroups = (props) => {
   const {colors} = useTheme();
   const [refreshing, setRefreshing] = React.useState(false);
   const [data, setData] = React.useState([]);
-  const [dataBackup, setDataBackup] = React.useState([]);
-  const [cost, setCost] = React.useState([]);
-  const [costBackup, setCostBackup] = React.useState([]);
-  const [task, setTask] = React.useState([]);
-  const [taskBackup, setTaskBackup] = React.useState([]);
-  const [dateExp, setDateExp] = React.useState([]);
-  const [dateExpBackup, setDateExpBackup] = React.useState([]);
-  const [short, setShort] = React.useState({
-    controls: {
-      status: {
-        elementType: 'select',
-        elementConfig: {
-          type: 'status',
-          text: 'Parent Task',
-          placeholder: 'Enter Parent Task',
-        },
-        value: 'all',
-        validation: {
-          required: true,
-        },
-        valid: false,
-        errors: '',
-        className: [],
-        icons: [],
-      },
-    },
-  });
+  const [trainer, setTrainer] = React.useState([]);
+  const [training, setTraining] = React.useState([]);
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -72,233 +53,184 @@ const AllGroups = (props) => {
 
   const apiCall = () => {
     InsideAuthApi(props.token)
-      .AllProject()
+      .UserData()
       .then((res) => {
-        setData(res.data.data);
-        setDataBackup(res.data.data);
-        setCost(res.data.cost);
-        setCostBackup(res.data.cost);
-        setTask(res.data.taskStatus);
-        setTaskBackup(res.data.taskStatus);
-        setDateExp(res.data.dateExp);
-        setDateExpBackup(res.data.dateExp);
-        displayResponse(res, true);
+        setData(res.data);
+      })
+      .catch((err) => {
+        displayResponse(err.message);
+      });
+    InsideAuthApi(props.token)
+      .GetTrainer()
+      .then((res) => {
+        setTrainer(res.data);
+      })
+      .catch((err) => {
+        displayResponse(err.message);
+      });
+    InsideAuthApi(props.token)
+      .GetTraining()
+      .then((res) => {
+        setTraining(res.data);
       })
       .catch((err) => {
         displayResponse(err.message);
       });
   };
 
-  const onInputChange = (val, type) => {
-    let varVal = {};
-    let valData = [];
-    let valTask = [];
-    let valcost = [];
-    let valdate = [];
-    let copTask = [];
-    if (val === 'in progress') {
-      dataBackup.map((x, index) =>
-        (taskBackup[index] === 'in progress'
-          ? (valData.push(x),
-            valTask.push(taskBackup[index]),
-            valcost.push(costBackup[index]),
-            valdate.push(dateExpBackup[index]))
-          : null)
-      );
-      setTask(valTask);
-      setDateExp(valdate);
-      setCost(valcost);
-      setData(valData);
-    } else if (val === 'created') {
-      dataBackup.map((x, index) =>
-        ((taskBackup[index] == 'created' || typeof(taskBackup[index]) === 'undefined')
-          ? (valData.push(x),
-            valTask.push(taskBackup[index]),
-            valcost.push(costBackup[index]),
-            valdate.push(dateExpBackup[index]))
-          : null)
-      );
-      setTask(valTask);
-      setCost(valcost);
-      setDateExp(valdate);
-      setData(valData);
-    } else if (val === 'completed') {
-      dataBackup.map((x, index) =>
-        (taskBackup[index] == 'complete'
-          ? (valData.push(x),
-            valTask.push(taskBackup[index]),
-            valcost.push(costBackup[index]),
-            valdate.push(dateExpBackup[index]))
-          : null)
-      );
-      setTask(valTask);
-      setCost(valcost);
-      setDateExp(valdate);
-      setData(valData);
-    } else if (val === 'cost inc') {
-      costBackup.map((i, index) =>
-          (copTask.push([
-          costBackup[index],
-          taskBackup[index],
-          dateExpBackup[index],
-          index,
-        ])),
-      );
-      copTask.sort(function (a, b) {
-        return a[0] > b[0] ? -1 : 1;
-      });
-      dataBackup.map(
-        (x, index) => (
-          valData.push(dataBackup[copTask[index][3]]),
-          valTask.push(copTask[index][1]),
-          valcost.push(copTask[index][0]),
-          valdate.push(copTask[index][2])
-        ),
-      );
-      setTask(valTask);
-      setDateExp(valdate);
-      setCost(valcost);
-      setData(valData);
-    } else if (val === 'cost dec') {
-      costBackup.map((i, index) =>
-         ( copTask.push([
-          costBackup[index],
-          taskBackup[index],
-          dateExpBackup[index],
-          index,
-        ])),
-      );
-      copTask.sort(function (a, b) {
-        return a[0] < b[0] ? -1 : 1;
-      });
-      dataBackup.map(
-        (x, index) => (
-          valData.push(dataBackup[copTask[index][3]]),
-          valTask.push(copTask[index][1]),
-          valcost.push(copTask[index][0]),
-          valdate.push(copTask[index][2])
-        ),
-      );
-      setTask(valTask);
-      setCost(valcost);
-      setDateExp(valdate);
-      setData(valData);
-    }else{
-      costBackup.map((i, index) =>
-          (copTask.push([
-          costBackup[index],
-          taskBackup[index],
-          dateExpBackup[index],
-          index,
-        ])),
-      );
-      copTask.sort(function (a, b) {
-        return a[0] > b[0] ? -1 : 1;
-      });
-      dataBackup.map(
-        (x, index) => (
-          valData.push(dataBackup[copTask[index][3]]),
-          valTask.push(copTask[index][1]),
-          valcost.push(copTask[index][0]),
-          valdate.push(copTask[index][2])
-        ),
-      );
-      setTask(taskBackup);
-      setDateExp(dateExpBackup);
-      setCost(costBackup);
-      setData(dataBackup);
-    }
-    varVal = updateObject(short, {
-      controls: updateObject(short.controls, {
-        [type]: updateObject(short.controls[type], {
-          value: val,
-          errors: '',
-          valid: false,
-        }),
-      }),
-    });
-    setShort(varVal);
-  };
-  
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
-
+      style={{backgroundColor: '#f0f8ff3b', paddingHorizontal: 20}}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }>
-      <CommonInput
-        placeholder={short.controls.status.elementConfig.placeholder}
-        onSelect={onInputChange}
-        style={{marginRight: 20}}
-        onSubmit={() => Keyboard.dismiss()}
-        value={short.controls.status.value}
-        type={short.controls.status.elementConfig.type}
-        isValid={short.controls.status.valid}
-        validation={short.controls.status.validation}
-        icons={short.controls.status.icons}
-        ele={short.controls.status.elementType}
-        options={[
-          'all',
-          'created',
-          'in progress',
-          'completed',
-          'cost inc',
-          'cost dec',
-        ]}
-      />
-      {data.map((x, index) => (
+      <Title style={{fontSize: 20, marginVertical: 20}}>
+        Hello {data.name}
+      </Title>
+      <View style={{flexDirection: 'row'}}>
         <TouchableOpacity
-          key={index}
-          onPress={() =>
-            props.navigation.navigate('TaskScreen', {
-              projectId: x._id,
-              owner: x.owner,
-              projectAssigned: x.projectAssigned
-            })
-          }>
-          {dateExp[index]?<Card.Title
-            title={x.name}
-            style={{backgroundColor: dateExp[index]? '#F08080' : ''}}
-            right={() => (
-              <Text style={{marginRight: 10}}>
-                <Text>Cost: {cost[index]}</Text>
-                <Text> Status: {task[index] ? task[index] : 'created'}</Text>
-              </Text>
-            )}
-            subtitle={x?.details}
-            left={() => (
-              <Avatar.Text
-                size={45}
-                label={x?.name.charAt(0)}
-                style={{paddingBottom: 5}}
-              />
-            )}
-          />:
-          <Card.Title
-            title={x.name}
-            // style={{backgroundColor: dateExp[index]? '#F08080' : ''}}
-            right={() => (
-              <Text style={{marginRight: 10}}>
-                <Text>Cost: {cost[index]}</Text>
-                <Text> Status: {task[index] ? task[index] : 'created'}</Text>
-              </Text>
-            )}
-            subtitle={x?.details}
-            left={() => (
-              <Avatar.Text
-                size={45}
-                label={x?.name.charAt(0)}
-                style={{paddingBottom: 5}}
-              />
-            )}
-          />}
+          onPress={() => props.navigation.navigate('RegularUpdate')}>
+          <Card style={{flex: 1, marginRight: 10, width: (Dimensions.get('window').width / 2) - 15}}>
+            <Card.Content>
+              <Title>Water Taken</Title>
+              <Paragraph>{data.waterInfo}</Paragraph>
+            </Card.Content>
+          </Card>
         </TouchableOpacity>
-      ))}
+        <TouchableOpacity
+          onPress={() => props.navigation.navigate('RegularUpdate')}>
+          <Card style={{flex: 1, width: (Dimensions.get('window').width / 2) - 15}}>
+            <Card.Content>
+              <Title>Calories Taken </Title>
+              <Paragraph>{data.calInfo}</Paragraph>
+            </Card.Content>
+          </Card>
+        </TouchableOpacity>
+      </View>
+      <View style={{backgroundColor: 'white', marginTop: 20}}>
+        <Card.Title
+          title="All Trainers"
+          style={{borderBottomWidth: 1, borderBottomColor: colors.mainColor}}
+          right={() => (
+            <ButtonLayout
+              outline
+              style={{width: 50}}
+              onPress={() => props.navigation.navigate('TrainnerScreen')}>
+              Vew
+            </ButtonLayout>
+          )}
+        />
+        {trainer.map((x, index) =>
+          index <= 2 ? (
+            <Card.Title
+              key={index}
+              title={x.name}
+              style={{marginBottom: 10}}
+              left={(props) => (
+                <Avatar.Text size={40} label={x?.name.charAt(0)} />
+              )}
+            />
+          ) : null,
+        )}
+      </View>
+      <View style={{backgroundColor: 'white', marginTop: 20}}>
+        {training.filter((x) => x.type == 'm').length ? (
+          <Card.Title
+            title="Meditation"
+            style={{borderBottomWidth: 1, borderBottomColor: colors.mainColor}}
+            right={() => (
+              <ButtonLayout
+                outline
+                style={{width: 50}}
+                onPress={() =>
+                  props.navigation.navigate('VideoScreen', {
+                    data: 'm',
+                  })
+                }>
+                Vew
+              </ButtonLayout>
+            )}
+          />
+        ) : null}
+        {training
+          .filter((x) => x.type == 'm')
+          .map((x, index) =>
+            index <= 2 ? (
+              <View key={index} style={{marginTop: 10}}>
+                <Video
+                  source={{uri: x.url}}
+                  style={{
+                    alignItems: 'center',
+                    flex: 1,
+                    justifyContent: 'center',
+                    width: Dimensions.get('window').width,
+                    height: 200,
+                    backgroundColor: 'black',
+                  }}
+                  controls={true}
+                  controls={true}
+                  paused={false}
+                  fullscreen={true}
+                  resizeMode="cover"
+                />
+                <Title>{x.heading}</Title>
+                <Paragraph>{x.details}</Paragraph>
+              </View>
+            ) : null,
+          )}
+      </View>
+      <View style={{backgroundColor: 'white', marginTop: 20}}>
+        {training.filter((x) => x.type != 'm').length ? (
+          <Card.Title
+            title="Workout"
+            style={{borderBottomWidth: 1, borderBottomColor: colors.mainColor}}
+            right={() => (
+              <ButtonLayout
+                outline
+                style={{width: 50}}
+                onPress={() =>
+                  props.navigation.navigate('VideoScreen', {
+                    data: 'w',
+                  })
+                }>
+                Vew
+              </ButtonLayout>
+            )}
+          />
+        ) : null}
+        {training
+          .filter((x) => x.type != 'm')
+          .map((x, index) =>
+            index <= 2 ? (
+              <View key={index} style={{marginTop: 10}}>
+                <Video
+                  source={{uri: x.url}}
+                  style={{
+                    alignItems: 'center',
+                    flex: 1,
+                    justifyContent: 'center',
+                    width: Dimensions.get('window').width,
+                    height: 200,
+                    backgroundColor: 'black',
+                  }}
+                  controls={true}
+                  controls={true}
+                  paused={false}
+                  fullscreen={true}
+                  resizeMode="cover"
+                />
+                <Title>{x.heading}</Title>
+                <Paragraph>{x.details}</Paragraph>
+              </View>
+            ) : null,
+          )}
+      </View>
     </ScrollView>
   );
 };
+
 const mapStateToProps = (state) => {
   return {
     token: state.auth.access_token,

@@ -40,23 +40,26 @@ const DrawerContent = (props) => {
         </View>
         <Drawer.Section style={styles.drawerSection}>
           <DrawerItem
-            icon={({color, size}) => (
-              <Icon name={'home-outline'} color={color} size={size} />
-            )}
-            label="Home"
-            onPress={() => props.navigation.navigate('LandingScreen')}
+            label="Trainers"
+            onPress={() => props.navigation.navigate('TrainnerScreen')}
+          />
+          <DrawerItem
+           label="Meditation"
+            onPress={() => props.navigation.navigate('VideoScreen', {
+              data: 'm',
+            })}
+          />
+          <DrawerItem
+           label="Workout"
+            onPress={() => props.navigation.navigate('VideoScreen', {
+              data: 'w',
+            })}
+          />
+          <DrawerItem
+           label="All Chats"
+            onPress={() => props.navigation.navigate('AllChatScreen')}
           />
         </Drawer.Section>
-        {/* <Drawer.Section title="Prefarence">
-          <TouchableRipple title={'Prefarence'}>
-            <View style={styles.preference}>
-              <Text>Dark Theme</Text>
-              <View pointerEvents="none">
-                <Switch value={true} />
-              </View>
-            </View>
-          </TouchableRipple>
-        </Drawer.Section> */}
       </DrawerContentScrollView>
       <Drawer.Section style={styles.bottomDraweeSection}>
         <DrawerItem
@@ -70,7 +73,7 @@ const DrawerContent = (props) => {
           }}
         />
       </Drawer.Section>
-      {/* <Text>hi</Text> */}
+
     </View>
   );
 };
