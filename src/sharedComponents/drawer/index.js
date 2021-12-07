@@ -16,9 +16,19 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IonicIcon from 'react-native-vector-icons/Ionicons';
 import * as actions from '../../store/actions';
 import {styles} from './style';
+import {_retrieveData} from '../../utils'
 
 const DrawerContent = (props) => {
   const {colors} = useTheme();
+  const [role, setrole] = React.useState('');
+
+  React.useEffect(()=>{
+    call();
+  })
+  const call = async() => {
+    const varUser = await _retrieveData('User');
+    setrole(JSON.parse(varUser).name);
+  }
   return (
     <View style={{flex: 1, backgroundColor: colors.backgroundColor}}>
       <DrawerContentScrollView {...props}>
@@ -33,7 +43,7 @@ const DrawerContent = (props) => {
                 size={50}
               />
               <View style={{marginLeft: 15, flexDirection: 'column'}}>
-                <Title style={styles.title}>User</Title>
+                <Title style={styles.title}>{role}</Title>
               </View>
             </View>
           </View>
@@ -54,10 +64,6 @@ const DrawerContent = (props) => {
             onPress={() => props.navigation.navigate('VideoScreen', {
               data: 'w',
             })}
-          />
-          <DrawerItem
-           label="All Chats"
-            onPress={() => props.navigation.navigate('AllChatScreen')}
           />
         </Drawer.Section>
       </DrawerContentScrollView>

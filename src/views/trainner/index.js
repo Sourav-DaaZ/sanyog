@@ -1,19 +1,27 @@
 import {Button, View} from 'native-base';
 import * as React from 'react';
-import {ScrollView, Keyboard} from 'react-native';
+import {ScrollView, RefreshControl} from 'react-native';
 import {useTheme, Text, Card, Avatar} from 'react-native-paper';
 import {connect} from 'react-redux';
 
 import * as actions from '../../store/actions';
-import {displayResponse} from '../../utils';
+import {displayResponse, _retrieveData} from '../../utils';
 import ButtonLayout from '../../sharedComponents/button';
 import InsideAuthApi from '../../services/inSideAuth';
 
 const TrainnerScreen = (props) => {
   const {colors} = useTheme();
+  const [refreshing, setRefreshing] = React.useState(false);
   const [data, setData] = React.useState([]);
+  const [role, setrole] = React.useState('');
 
   React.useEffect(() => {
+    apiCall();
+  }, []);
+
+  const apiCall = async() => {
+    const varUser = await _retrieveData('User');
+    setrole(JSON.parse(varUser).type);
     props.loader(true);
 
     InsideAuthApi(props.token)
@@ -27,15 +35,43 @@ const TrainnerScreen = (props) => {
         props.loader(false);
         displayResponse(err.message);
       });
+  };
+  const wait = (timeout) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+  };
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(1000).then(() => {
+      apiCall();
+      setRefreshing(false);
+    });
   }, []);
 
+  React.useEffect(() => {
+    apiCall();
+  }, []);
+  React.useEffect(() => {
+    const unsubscribe = props.navigation.addListener('focus', () => {
+      apiCall();
+    });
+
+    return unsubscribe;
+  }, [props.navigation]);
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
-      contentContainerStyle={{flex: 1}}>
+      contentContainerStyle={{flex: 1}}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }>
       <View style={{marginHorizontal: 20}}>
-        <ButtonLayout style={{marginVertical: 20}} onPress={()=>props.navigation.navigate('CreateTrainer')}>Add Trainer</ButtonLayout>
+      {role === 'admin'?<ButtonLayout
+          style={{marginVertical: 20}}
+          onPress={() => props.navigation.navigate('CreateTrainer')}>
+          Add Trainer
+        </ButtonLayout>:null}
         {data.map((x, index) => (
           <Card.Title
             key={index}

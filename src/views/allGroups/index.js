@@ -123,7 +123,7 @@ const AllGroups = (props) => {
           )}
         />
         {trainer.map((x, index) =>
-          index <= 2 ? (
+          index < 2 ? (
             <Card.Title
               key={index}
               title={x.name}
@@ -157,7 +157,7 @@ const AllGroups = (props) => {
         {training
           .filter((x) => x.type == 'm')
           .map((x, index) =>
-            index <= 2 ? (
+            index < 2 ? (
               <View key={index} style={{marginTop: 10}}>
                 <Video
                   source={{uri: x.url}}
@@ -203,7 +203,7 @@ const AllGroups = (props) => {
         {training
           .filter((x) => x.type != 'm')
           .map((x, index) =>
-            index <= 2 ? (
+            index < 2 ? (
               <View key={index} style={{marginTop: 10}}>
                 <Video
                   source={{uri: x.url}}

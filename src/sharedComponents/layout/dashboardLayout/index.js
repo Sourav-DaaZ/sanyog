@@ -69,18 +69,6 @@ const DashboardLayout = (props) => {
         )}
         initialLayout={{width: layout.width}}
       />
-      {type === '"admin"'?
-      <FAB
-        style={{
-          position: 'absolute',
-          margin: 16,
-          right: 0,
-          bottom: 0,
-          backgroundColor: colors.mainColor,
-        }}
-        icon="plus"
-        onPress={() => props.navigation.navigate('')}
-      />:null}
     </View>
   );
 };

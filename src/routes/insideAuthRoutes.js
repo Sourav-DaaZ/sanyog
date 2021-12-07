@@ -16,12 +16,22 @@ import SearchScreen from '../views/searchScreen';
 import CreateTrainer from '../views/createTrainer';
 import CreateTraining from '../views/createTraining';
 import BackBtn from '../sharedComponents/backBtn';
+import {_retrieveData} from '../utils';
 
 const RootStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
 const InsideAuthRoutes = () => {
   const {colors} = useTheme();
+  const [role, setrole] = React.useState('');
+  React.useEffect(()=>{
+    apiCall();
+  })
+
+  const apiCall = async() => {
+    const varUser = await _retrieveData('User');
+    setrole(JSON.parse(varUser).type);
+  }
 
   const AllComponent = (props) => (
     <RootStack.Navigator>
@@ -54,7 +64,7 @@ const InsideAuthRoutes = () => {
               color={colors.backgroundColor}
               style={{marginRight: 15}}
               size={30}
-              onPress={()=>props.navigation.navigate('ChatScreen')} />
+              onPress={()=> role !== 'admin'?props.navigation.navigate('ChatScreen'):props.navigation.navigate('AllChatScreen')} />
           )
         })}
       />
@@ -143,27 +153,6 @@ const InsideAuthRoutes = () => {
         })}
       />
       <RootStack.Screen
-        name="AllChatScreen"
-        component={AllChatScreen}
-        options={() => ({
-          headerTitle: () => (
-            <Text
-              style={[
-                styles.headerText,
-                {color: colors.backgroundColor},
-              ]}>Chats</Text>
-          ),
-          headerStyle: {
-            backgroundColor: colors.mainColor,
-            borderBottomWidth: 0,
-            shadowOpacity: 0,
-          },
-          headerLeft: () => (
-            <BackBtn onClick={() => props.navigation.goBack()} size={35} />
-          ),
-        })}
-      />
-      <RootStack.Screen
         name="ChatScreen"
         component={ChatScreen}
         options={() => ({
@@ -194,6 +183,27 @@ const InsideAuthRoutes = () => {
                 styles.headerText,
                 {color: colors.backgroundColor},
               ]}>Add Video</Text>
+          ),
+          headerStyle: {
+            backgroundColor: colors.mainColor,
+            borderBottomWidth: 0,
+            shadowOpacity: 0,
+          },
+          headerLeft: () => (
+            <BackBtn onClick={() => props.navigation.goBack()} size={35} />
+          ),
+        })}
+      />
+      <RootStack.Screen
+        name="AllChatScreen"
+        component={AllChatScreen}
+        options={() => ({
+          headerTitle: () => (
+            <Text
+              style={[
+                styles.headerText,
+                {color: colors.backgroundColor},
+              ]}>Chats</Text>
           ),
           headerStyle: {
             backgroundColor: colors.mainColor,

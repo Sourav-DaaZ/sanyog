@@ -8,6 +8,7 @@ import * as actions from '../../store/actions';
 import {displayResponse} from '../../utils';
 import ButtonLayout from '../../sharedComponents/button';
 import InsideAuthApi from '../../services/inSideAuth';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const AllChatScreen = (props) => {
   const {colors} = useTheme();
@@ -34,19 +35,20 @@ const AllChatScreen = (props) => {
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={{flex: 1}}>
-      <View>
         {data.map((x, index) => (
+          <TouchableOpacity key={index} onPress={()=>props.navigation.navigate('ChatScreen', {
+            data: x.owner,
+          })}>
           <Card.Title
-            key={index}
             title={'user '+(index+1)}
             subtitle={x.chats[x.chats.length -1].chat}
             style={{marginBottom: 10}}
-            left={(props) => (
+            left={() => (
               <Avatar.Text size={40} label={'U'} />
             )}
           />
+          </TouchableOpacity>
         ))}
-      </View>
     </ScrollView>
   );
 };

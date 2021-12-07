@@ -19,8 +19,8 @@ const CreateTrainer = (props) => {
         elementType: 'input',
         elementConfig: {
           type: 'input',
-          text: 'Water Update',
-          placeholder: 'Enter the amount that you took',
+          text: 'Name',
+          placeholder: 'Enter the Trainer name',
         },
         value: 0,
         validation: {
@@ -38,8 +38,46 @@ const CreateTrainer = (props) => {
         elementType: 'input',
         elementConfig: {
           type: 'details',
-          text: 'Calorie Update',
-          placeholder: 'Enter the amount that you took',
+          text: 'Place',
+          placeholder: 'Enter the Place',
+        },
+        value: '',
+        validation: {
+          required: true,
+        },
+        valid: false,
+        errors: '',
+        className: [],
+        icons: [
+          <FontAwesome name="user-o" color="#05375a" size={20} />,
+          <Feather name="check-circle" color="green" size={20} />,
+        ],
+      },
+      price: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'price',
+          text: 'Price',
+          placeholder: 'Enter the Price',
+        },
+        value: 0,
+        validation: {
+          required: true,
+        },
+        valid: false,
+        errors: '',
+        className: [],
+        icons: [
+          <FontAwesome name="user-o" color="#05375a" size={20} />,
+          <Feather name="check-circle" color="green" size={20} />,
+        ],
+      },
+      calorie: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'phone',
+          text: 'Phone',
+          placeholder: 'Enter the Phone Number',
         },
         value: 0,
         validation: {
@@ -72,9 +110,12 @@ const CreateTrainer = (props) => {
 
   const onUpdate = () => {
     InsideAuthApi(props.token)
-      .RegularUpdate({
-        "waterInfo": Number(data.controls.input.value),
-        "calInfo": Number(data.controls.details.value)
+      .EditTrainer({
+        "name": data.controls.input.value,
+        "place": data.controls.details.value,
+        "price": Number(data.controls.price.value),
+        "callInfo": data.controls.calorie.value,
+        "delete": false,
       })
       .then((res) => {
         props.navigation.goBack();
@@ -90,10 +131,10 @@ const CreateTrainer = (props) => {
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={{flex: 1}}>
       <View style={{flex: 1, justifyContent: 'center'}}>
-        <Text style={styles.headerText}>Details Update</Text>
+        <Text style={styles.headerText}>Add Trainer</Text>
         <View style={styles.outerBox}>
           <React.Fragment>
-            <Text style={styles.text_footer}>Total Water</Text>
+            <Text style={styles.text_footer}>Name</Text>
             <View>
               <CommonInput
                 placeholder={data.controls.input.elementConfig.placeholder}
@@ -105,13 +146,12 @@ const CreateTrainer = (props) => {
                 validation={data.controls.input.validation}
                 icons={data.controls.input.icons}
                 ele={data.controls.input.elementType}
-                keyNum={true}
               />
             </View>
           </React.Fragment>
           <React.Fragment>
             <Text style={[styles.text_footer, {marginTop: 20}]}>
-            Total Calorie
+            Place
             </Text>
             <View>
               <CommonInput
@@ -124,10 +164,46 @@ const CreateTrainer = (props) => {
                 validation={data.controls.details.validation}
                 icons={data.controls.details.icons}
                 ele={data.controls.details.elementType}
+              />
+            </View>
+          </React.Fragment>
+          <React.Fragment>
+            <Text style={[styles.text_footer, {marginTop: 20}]}>
+            Price
+            </Text>
+            <View>
+              <CommonInput
+                placeholder={data.controls.price.elementConfig.placeholder}
+                onInputChange={onInputChange}
+                onSubmit={() => Keyboard.dismiss()}
+                value={data.controls.price.value}
+                type={data.controls.price.elementConfig.type}
+                isValid={data.controls.price.valid}
+                validation={data.controls.price.validation}
+                icons={data.controls.price.icons}
+                ele={data.controls.price.elementType}
                 keyNum={true}
               />
             </View>
-            <ButtonLayout style={{marginTop: 20}} onPress={onUpdate}>Update</ButtonLayout>
+          </React.Fragment>
+          <React.Fragment>
+            <Text style={[styles.text_footer, {marginTop: 20}]}>
+            Phone Number
+            </Text>
+            <View>
+              <CommonInput
+                placeholder={data.controls.calorie.elementConfig.placeholder}
+                onInputChange={onInputChange}
+                onSubmit={() => Keyboard.dismiss()}
+                value={data.controls.calorie.value}
+                type={data.controls.calorie.elementConfig.type}
+                isValid={data.controls.calorie.valid}
+                validation={data.controls.calorie.validation}
+                icons={data.controls.calorie.icons}
+                ele={data.controls.calorie.elementType}
+              />
+            </View>
+            <ButtonLayout style={{marginTop: 20}} onPress={onUpdate}>Add</ButtonLayout>
           </React.Fragment>
         </View>
       </View>

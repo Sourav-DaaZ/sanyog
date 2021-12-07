@@ -5,12 +5,13 @@ import {Title, Paragraph, useTheme} from 'react-native-paper';
 import InsideAuthApi from '../../services/inSideAuth';
 import {connect} from 'react-redux';
 import ButtonLayout from '../../sharedComponents/button';
-import {displayResponse} from '../../utils';
+import {displayResponse,_retrieveData} from '../../utils';
 
 const VideoScreen = (props) => {
   const {colors} = useTheme();
   const [refreshing, setRefreshing] = React.useState(false);
   const [data, setData] = React.useState([]);
+  const [role, setrole] = React.useState('');
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -31,7 +32,9 @@ const VideoScreen = (props) => {
   React.useEffect(() => {
     apiCall();
   }, []);
-  const apiCall = () => {
+  const apiCall = async() => {
+    const varUser = await _retrieveData('User');
+    setrole(JSON.parse(varUser).type);
     InsideAuthApi(props.token)
       .GetTraining()
       .then((res) => {
@@ -52,7 +55,7 @@ const VideoScreen = (props) => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }>
           <View style={{marginHorizontal: 20}}>
-        <ButtonLayout style={{marginVertical: 20}} onPress={()=>props.navigation.navigate('CreateTraining')}>Add A Video</ButtonLayout>
+        {role === 'admin'?<ButtonLayout style={{marginVertical: 20}} onPress={()=>props.navigation.navigate('CreateTraining')}>Add A Video</ButtonLayout>:null}
 
         {data
           .filter((x) => x.type == props.route.params.data)

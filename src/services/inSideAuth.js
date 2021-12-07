@@ -46,6 +46,30 @@ const InsideAuthApi = (token) => {
         method: 'GET',
         headers: {...defaultHeaders},
       });
+    },
+    EditTrainer(data) {
+      return axiosObj({
+        url: API.noAuthUrls.editTrainer,
+        method: 'POST',
+        headers: {...defaultHeaders},
+        data: data
+      });
+    },
+    AddTraining(data) {
+      return axiosObj({
+        url: API.noAuthUrls.addTraining,
+        method: 'POST',
+        headers: {...defaultHeaders},
+        data: data
+      });
+    },
+    EditChats(data) {
+      return axiosObj({
+        url: API.noAuthUrls.editChats,
+        method: 'POST',
+        headers: {...defaultHeaders},
+        data: data
+      });
     }
   };
 };
