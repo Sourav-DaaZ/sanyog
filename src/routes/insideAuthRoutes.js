@@ -1,17 +1,12 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import DashboardLayout from '../sharedComponents/layout/dashboardLayout';
+import Dashboard from '../views/Dashboard';
 import {Text, useTheme} from 'react-native-paper';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import DrawerContent from '../sharedComponents/drawer';
 import {styles} from './style';
-import TaskScreen from '../views/taskScreen';
-import CreatTaskScreen from '../views/createTask';
-import EditTaskScreen from '../views/editTask';
-import SearchScreen from '../views/searchScreen';
-import BackBtn from '../sharedComponents/backBtn';
 
 const RootStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -23,11 +18,11 @@ const InsideAuthRoutes = () => {
     <RootStack.Navigator>
       <RootStack.Screen
         name="LandingScreen"
-        component={DashboardLayout}
+        component={Dashboard}
         options={() => ({
           headerTitle: () => (
             <Text style={[styles.headerText, {color: colors.backgroundColor}]}>
-              Project Management
+              Grocery App
             </Text>
           ),
           headerStyle: {
@@ -44,88 +39,6 @@ const InsideAuthRoutes = () => {
               onPress={() => props.navigation.openDrawer()}
             />
           )
-        })}
-      />
-      <RootStack.Screen
-        name="TaskScreen"
-        component={TaskScreen}
-        options={() => ({
-          headerTitle: () => (
-            <Text style={[styles.headerText, {color: colors.backgroundColor}]}>
-              Task List
-            </Text>
-          ),
-          headerStyle: {
-            backgroundColor: colors.mainColor,
-            borderBottomWidth: 0,
-            shadowOpacity: 0,
-          },
-          headerLeft: () => (
-            <BackBtn onClick={() => props.navigation.goBack()} size={35} />
-          ),
-        })}
-      />
-      <RootStack.Screen
-        name="SearchScreen"
-        component={SearchScreen}
-        options={() => ({
-          headerTitle: () => (
-            <Text
-              style={[
-                styles.headerText,
-                {color: colors.backgroundColor},
-              ]}></Text>
-          ),
-          headerStyle: {
-            backgroundColor: colors.mainColor,
-            borderBottomWidth: 0,
-            shadowOpacity: 0,
-          },
-          headerLeft: () => (
-            <BackBtn onClick={() => props.navigation.goBack()} size={35} />
-          ),
-        })}
-      />
-      <RootStack.Screen
-        name="CreateTaskScreen"
-        component={CreatTaskScreen}
-        options={() => ({
-          headerTitle: () => (
-            <Text
-              style={[
-                styles.headerText,
-                {color: colors.backgroundColor},
-              ]}></Text>
-          ),
-          headerStyle: {
-            backgroundColor: colors.mainColor,
-            borderBottomWidth: 0,
-            shadowOpacity: 0,
-          },
-          headerLeft: () => (
-            <BackBtn onClick={() => props.navigation.goBack()} size={35} />
-          ),
-        })}
-      />
-      <RootStack.Screen
-        name="EditTaskScreen"
-        component={EditTaskScreen}
-        options={() => ({
-          headerTitle: () => (
-            <Text
-              style={[
-                styles.headerText,
-                {color: colors.backgroundColor},
-              ]}></Text>
-          ),
-          headerStyle: {
-            backgroundColor: colors.mainColor,
-            borderBottomWidth: 0,
-            shadowOpacity: 0,
-          },
-          headerLeft: () => (
-            <BackBtn onClick={() => props.navigation.goBack()} size={35} />
-          ),
         })}
       />
     </RootStack.Navigator>
