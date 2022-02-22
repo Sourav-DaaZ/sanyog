@@ -17,6 +17,8 @@ target 'sanyog_frontend' do
 
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
 
+  pod 'react-native-geolocation', :path => '../node_modules/@react-native-community/geolocation'
+
   target 'sanyog_frontendTests' do
     inherit! :complete
     # Pods for testing
