@@ -1,7 +1,7 @@
 import {View} from 'native-base';
 import * as React from 'react';
 import {Alert, ScrollView, TouchableOpacity, Keyboard} from 'react-native';
-import {Avatar, Card, useTheme, Text} from 'react-native-paper';
+import {Avatar, useTheme, Text} from 'react-native-paper';
 import {connect} from 'react-redux';
 
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -15,7 +15,7 @@ import {displayResponse, updateObject} from '../../utils';
 import ButtonLayout from '../../sharedComponents/button';
 import InsideAuthApi from '../../services/inSideAuth';
 
-const SearchScreen = (props) => {
+const ProfileScreen = (props) => {
   const {colors} = useTheme();
   const [data, setData] = React.useState({
     controls: {
@@ -23,8 +23,8 @@ const SearchScreen = (props) => {
         elementType: 'input',
         elementConfig: {
           type: 'input',
-          text: 'Name',
-          placeholder: 'Enter project name',
+          text: 'First Name',
+          placeholder: 'Enter First Name',
         },
         value: '',
         validation: {
@@ -43,8 +43,8 @@ const SearchScreen = (props) => {
         elementType: 'input',
         elementConfig: {
           type: 'details',
-          text: 'Description',
-          placeholder: 'Enter project description',
+          text: 'Last Name',
+          placeholder: 'Enter Last Name',
         },
         value: '',
         validation: {
@@ -77,29 +77,7 @@ const SearchScreen = (props) => {
   };
   const onSearch = () => {
     props.loader(true);
-    let varVl;
-    let datas = {
-      "name": data.controls.input.value,
-      "details": data.controls.details.value,
-    }
-    InsideAuthApi(props.token)
-      .CreateProject(datas)
-      .then(async (res) => {
-        props.loader(false);
-        displayResponse(res, true);
-        props.navigation.navigate('LandingScreen');
-      })
-      .catch((err) => {
-        props.loader(false);
-        varVl = updateObject(data, {
-          controls: updateObject(data.controls, {
-            input: updateObject(data.controls.input, {
-              errors: err.message,
-            }),
-          }),
-        });
-        setData(varVl);
-      });
+    
   };
 
   return (
@@ -108,9 +86,12 @@ const SearchScreen = (props) => {
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={{flex: 1}}>
       <View style={{flex: 1, justifyContent: 'center'}}>
-        <Text style={styles.headerText}>Create Project</Text>
+        <Text style={styles.headerText}>Profile</Text>
         <View style={styles.outerBox}>
-          <Text style={styles.text_footer}>Enter Project Name</Text>
+          <View style={{alignItems: 'center', marginBottom: 30}}>
+            <Avatar.Image size={100} source={require('../../assets/images/user.jpeg')} />
+          </View>
+          <Text style={styles.text_footer}>First Name</Text>
           <View>
             <CommonInput
               placeholder={data.controls.input.elementConfig.placeholder}
@@ -124,7 +105,7 @@ const SearchScreen = (props) => {
               ele={data.controls.input.elementType}
             />
            </View>
-          <Text style={[styles.text_footer,{marginTop: 20}]}>Enter Project description</Text>
+          <Text style={[styles.text_footer,{marginTop: 20}]}>Last Name</Text>
           <View>
             <CommonInput
               placeholder={data.controls.details.elementConfig.placeholder}
@@ -139,7 +120,7 @@ const SearchScreen = (props) => {
             />
            </View>
           <View style={[styles.buttonInput,{marginTop: 20}]}>
-            <ButtonLayout onPress={onSearch}>Create Project</ButtonLayout>
+            <ButtonLayout onPress={onSearch}>Save</ButtonLayout>
           </View>
           {data.controls.input.errors ? (
             <Text style={{color: 'red'}}>{data.controls.input.errors}</Text>
@@ -161,4 +142,4 @@ const mapDispatchToProps = (dispatch) => {
     loader: (val) => dispatch(actions.loading(val))
   };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(SearchScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(ProfileScreen);

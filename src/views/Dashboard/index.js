@@ -30,32 +30,29 @@ const Dashboard = (props) => {
         },
         value: '',
         validation: {
-          required: true
+          required: true,
         },
         valid: false,
         errors: '',
         className: [],
-        icons: [
-          
-        ],
-      }
+        icons: [],
+      },
     },
   });
 
   const onInputChange = (val, type) => {
     let varVal = {};
-      varVal = updateObject(data, {
-        controls: updateObject(data.controls, {
-          [type]: updateObject(data.controls[type], {
-            value: val,
-            errors: '',
-            valid: true,
-          }),
+    varVal = updateObject(data, {
+      controls: updateObject(data.controls, {
+        [type]: updateObject(data.controls[type], {
+          value: val,
+          errors: '',
+          valid: true,
         }),
-      });
+      }),
+    });
     setData(varVal);
   };
-
 
   const currentLocation = () => {
     Geolocation.getCurrentPosition(
@@ -107,7 +104,12 @@ const Dashboard = (props) => {
           padding: 20,
         }}>
         <Button
-          onPress={currentLocation}
+          onPress={() => {
+            currentLocation();
+            setTimeout(() => {
+              props.navigation.navigate('LandingScreen');
+            }, 1000);
+          }}
           style={{
             width: '100%',
             textAlign: 'center',
@@ -120,7 +122,7 @@ const Dashboard = (props) => {
           OR
         </Text>
         <Button
-          onPress={()=>setVisible(true)}
+          onPress={() => setVisible(true)}
           style={{
             width: '100%',
             textAlign: 'center',
@@ -134,9 +136,8 @@ const Dashboard = (props) => {
         visable={visible}
         close={() => setVisible(false)}
         title="Enter Your pin code"
-        // onPress={onSubmit}
-        btnTxt="submit"
-        >
+        onPress={() => props.navigation.navigate('LandingScreen')}
+        btnTxt="submit">
         <CommonInput
           placeholder={data.controls.pin.elementConfig.placeholder}
           onInputChange={onInputChange}

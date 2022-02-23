@@ -46,6 +46,34 @@ const DrawerContent = (props) => {
             label="Home"
             onPress={() => props.navigation.navigate('LandingScreen')}
           />
+          <DrawerItem
+            icon={({color, size}) => (
+              <Icon name={'star'} color={color} size={size} />
+            )}
+            label="Profile"
+            onPress={() => props.navigation.navigate('ProfileScreen')}
+          />
+          <DrawerItem
+            icon={({color, size}) => (
+              <Icon name={'contactless-payment'} color={color} size={size} />
+            )}
+            label="Payment"
+            onPress={() => props.navigation.navigate('PaymentScreen')}
+          />
+          <DrawerItem
+            icon={({color, size}) => (
+              <Icon name={'package-variant'} color={color} size={size} />
+            )}
+            label="Order Details"
+            onPress={() => props.navigation.navigate('OrderScreen')}
+          />
+          <DrawerItem
+            icon={({color, size}) => (
+              <Icon name={'book'} color={color} size={size} />
+            )}
+            label="Delivary Details"
+            onPress={() => props.navigation.navigate('AddressScreen')}
+          />
         </Drawer.Section>
         {/* <Drawer.Section title="Prefarence">
           <TouchableRipple title={'Prefarence'}>
@@ -58,7 +86,7 @@ const DrawerContent = (props) => {
           </TouchableRipple>
         </Drawer.Section> */}
       </DrawerContentScrollView>
-      <Drawer.Section style={styles.bottomDraweeSection}>
+      {/* <Drawer.Section style={styles.bottomDraweeSection}>
         <DrawerItem
           icon={({color, size}) => (
             <Icon name={'exit-to-app'} color={color} size={size} />
@@ -69,7 +97,7 @@ const DrawerContent = (props) => {
             // props.navigation.navigate('LoginScreen');
           }}
         />
-      </Drawer.Section>
+      </Drawer.Section> */}
       {/* <Text>hi</Text> */}
     </View>
   );

@@ -19,8 +19,7 @@ const styles = StyleSheet.create({
   },
   inlineInput: {
     flexDirection: 'row',
-    justifyContent: 'center',
-
+    justifyContent: 'space-between',
   },
   buttonInput: {
     width: '100%',

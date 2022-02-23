@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native';
 
-const Styles = StyleSheet.create({
+const styles = StyleSheet.create({
   outerBox: {
     borderColor: 'red',
     shadowColor: '#000',
@@ -47,4 +47,4 @@ const Styles = StyleSheet.create({
   },
 });
 
-export default Styles;
+export default styles;
