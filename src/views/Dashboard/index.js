@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import {StyleSheet, View, Alert} from 'react-native';
+import {StyleSheet, View, Alert, TouchableOpacityBase} from 'react-native';
 import {Button, useTheme, Text} from 'react-native-paper';
 import {connect} from 'react-redux';
 
@@ -7,18 +7,47 @@ import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import ModalLayout from '../../sharedComponents/modal';
 import CommonInput from '../../sharedComponents/commonInput';
-import {updateObject} from '../../utils';
+import {updateObject, _storeData} from '../../utils';
+import MapViewDirections from 'react-native-maps-directions';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 const Dashboard = (props) => {
   const {colors} = useTheme();
   const mapRef = useRef(null);
   const [visible, setVisible] = React.useState(false);
+  const [reports, setReports] = React.useState([
+    {
+      id: 'BB',
+      lat: 0.002,
+      lon: 0.01,
+      location: 'BigBazar',
+    },
+    {
+      id: 'Tz',
+      lat: 0.04,
+      lon: 0.03,
+      location: 'Trendz',
+    },
+    {
+      id: 'S',
+      lat: -0.03,
+      lon: 0.03,
+      location: 'Shopify',
+    },
+    {
+      id: 'BS',
+      lat: -0.003,
+      lon: -0.02,
+      location: 'BigShop',
+    },
+  ]);
   const [marker, setMarker] = React.useState({
     latitude: 10,
     longitude: 10,
     latitudeDelta: 0.001,
     longitudeDelta: 0.001,
   });
+  const [markerSelect, setMarkerSelect] = React.useState(null);
   const [data, setData] = React.useState({
     controls: {
       pin: {
@@ -65,8 +94,8 @@ const Dashboard = (props) => {
           mapRef.current.animateToRegion({
             latitude: coords.latitude,
             longitude: coords.longitude,
-            latitudeDelta: 0.005,
-            longitudeDelta: 0.005,
+            latitudeDelta: 0.08,
+            longitudeDelta: 0.08,
           });
         }
       },
@@ -75,8 +104,13 @@ const Dashboard = (props) => {
     );
   };
   React.useEffect(() => {
+    // _storeData('shopMapLocation', null)
     currentLocation();
   }, []);
+
+  const OnShopPress = (x) => {
+    setMarkerSelect(x);
+  };
 
   return (
     <View style={styles.MainContainer}>
@@ -92,7 +126,35 @@ const Dashboard = (props) => {
         showsCompass={false}
         showsTraffic={false}
         toolbarEnabled={true}>
-        <MapView.Marker coordinate={marker} title={'Your Location'} draggable />
+        {markerSelect ? (
+          <MapViewDirections
+            origin={{
+              latitude: marker.latitude,
+              longitude: marker.longitude,
+            }}
+            destination={{
+              latitude: marker.latitude + markerSelect.lat,
+              longitude: marker.longitude + markerSelect.lon,
+            }}
+            apikey={'AIzaSyDQgiKMf2-NZrXY0fFGhLvhqVOMmtYNq0s'} // insert your API Key here
+            strokeWidth={2}
+            strokeColor="#111111"
+          />
+        ) : null}
+        {reports.map((report) => (
+          <MapView.Marker
+            key={report.id}
+            onPress={() => OnShopPress(report)}
+            coordinate={{
+              latitude: marker.latitude + report.lat,
+              longitude: marker.longitude + report.lon,
+            }}
+            title={report.location}>
+            <View style={styles.circle}>
+              <Text style={styles.pinText}>{report.id}</Text>
+            </View>
+          </MapView.Marker>
+        ))}
       </MapView>
       <View
         style={{
@@ -105,10 +167,12 @@ const Dashboard = (props) => {
         }}>
         <Button
           onPress={() => {
-            currentLocation();
-            setTimeout(() => {
-              props.navigation.navigate('LandingScreen');
-            }, 1000);
+            if (markerSelect) {
+              _storeData('shopMapLocation', markerSelect);
+            }
+            markerSelect
+              ? props.navigation.navigate('LandingScreen')
+              : currentLocation();
           }}
           style={{
             width: '100%',
@@ -116,7 +180,7 @@ const Dashboard = (props) => {
             backgroundColor: colors.mainColor,
           }}
           color={colors.backgroundColor}>
-          Current Location
+          {markerSelect ? 'Continue' : 'Current Location'}
         </Button>
         <Text style={{width: '100%', textAlign: 'center', padding: 10}}>
           OR
@@ -129,12 +193,24 @@ const Dashboard = (props) => {
             backgroundColor: colors.mainColor,
           }}
           color={colors.backgroundColor}>
-          Ener Pin code
+          Enter Pin code
         </Button>
       </View>
       <ModalLayout
         visable={visible}
-        close={() => setVisible(false)}
+        close={() => {
+          if (markerSelect) {
+            _storeData('shopMapLocation', markerSelect);
+          } else {
+            _storeData('shopMapLocation', {
+              id: 'BS',
+              lat: -0.003,
+              lon: -0.02,
+              location: 'BigShop',
+            });
+          }
+          setVisible(false);
+        }}
         title="Enter Your pin code"
         onPress={() => props.navigation.navigate('LandingScreen')}
         btnTxt="submit">
@@ -172,6 +248,19 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
+  },
+  circle: {
+    width: 30,
+    height: 30,
+    borderRadius: 30 / 2,
+    backgroundColor: 'red',
+  },
+  pinText: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 20,
+    marginBottom: 10,
   },
 });
 

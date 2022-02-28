@@ -72,7 +72,7 @@ export const _storeData = async (key, value) => {
 
 export const _retrieveData = async (key) => {
   try {
-    return await AsyncStorage.getItem(key);
+    return AsyncStorage.getItem(key)
   } catch (error) {
     displayResponse(error);
   }

@@ -28,7 +28,7 @@ const InsideAuthRoutes = () => {
     <RootStack.Navigator>
       <RootStack.Screen
         name="LandingScreen"
-        component={AllShopScreen}
+        component={SingleShopScreen}
         options={() => ({
           headerTitle: () => (
             <Text style={[styles.headerText, {color: colors.backgroundColor}]}>
@@ -66,38 +66,7 @@ const InsideAuthRoutes = () => {
             shadowOpacity: 0,
           },
           headerLeft: () => (
-            <MaterialIcon
-              name="arrow-back"
-              color={colors.backgroundColor}
-              style={{marginLeft: 15}}
-              size={30}
-              onPress={() => props.navigation.goBack()}
-            />
-          )
-        })}
-      />
-    <RootStack.Screen
-        name="SingleShopScreen"
-        component={SingleShopScreen}
-        options={() => ({
-          headerTitle: () => (
-            <Text style={[styles.headerText, {color: colors.backgroundColor}]}>
-              Store
-            </Text>
-          ),
-          headerStyle: {
-            backgroundColor: colors.mainColor,
-            borderBottomWidth: 0,
-            shadowOpacity: 0,
-          },
-          headerLeft: () => (
-            <MaterialIcon
-              name="arrow-back"
-              color={colors.backgroundColor}
-              style={{marginLeft: 15}}
-              size={30}
-              onPress={() => props.navigation.goBack()}
-            />
+            null
           )
         })}
       />

@@ -1,5 +1,5 @@
 const defaultValue = {
-  debuggingMode: false,
+  debuggingMode: true,
   otpLength: 4,
   store: [
     {

@@ -71,7 +71,7 @@ const DrawerContent = (props) => {
             icon={({color, size}) => (
               <Icon name={'book'} color={color} size={size} />
             )}
-            label="Delivary Details"
+            label="Delivery Details"
             onPress={() => props.navigation.navigate('AddressScreen')}
           />
         </Drawer.Section>
