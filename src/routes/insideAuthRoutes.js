@@ -17,6 +17,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 import DrawerContent from '../sharedComponents/drawer';
 import {styles} from './style';
+import Camera from '../views/Camera';
 
 const RootStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -77,6 +78,31 @@ const InsideAuthRoutes = () => {
           headerTitle: () => (
             <Text style={[styles.headerText, {color: colors.backgroundColor}]}>
               Cart Details
+            </Text>
+          ),
+          headerStyle: {
+            backgroundColor: colors.mainColor,
+            borderBottomWidth: 0,
+            shadowOpacity: 0,
+          },
+          headerLeft: () => (
+            <MaterialIcon
+              name="arrow-back"
+              color={colors.backgroundColor}
+              style={{marginLeft: 15}}
+              size={30}
+              onPress={() => props.navigation.goBack()}
+            />
+          )
+        })}
+      />
+    <RootStack.Screen
+        name="CameraScreen"
+        component={Camera}
+        options={() => ({
+          headerTitle: () => (
+            <Text style={[styles.headerText, {color: colors.backgroundColor}]}>
+              Camera
             </Text>
           ),
           headerStyle: {

@@ -1,5 +1,11 @@
 export {
    loading,
    refreshTokenUpdate,
-   accessTokenUpdate
+   accessTokenUpdate,
+   imageUpdate,
+   storeLocation,
+   addressUpdate,
+   paymentUpdate,
+   orderUpdate,
+   nameUpdate
 } from './auth';

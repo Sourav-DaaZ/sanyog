@@ -19,6 +19,10 @@ target 'sanyog_frontend' do
 
   pod 'react-native-geolocation', :path => '../node_modules/@react-native-community/geolocation'
 
+  pod 'react-native-camera', :path => '../node_modules/react-native-camera'
+
+  pod 'RNFS', :path => '../node_modules/react-native-fs'
+
   target 'sanyog_frontendTests' do
     inherit! :complete
     # Pods for testing

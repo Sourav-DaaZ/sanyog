@@ -1,8 +1,9 @@
 import {View} from 'native-base';
 import * as React from 'react';
-import {Alert, ScrollView, TouchableOpacity, Keyboard} from 'react-native';
+import {Alert, ScrollView, TouchableOpacity, Keyboard, Image} from 'react-native';
 import {Avatar, useTheme, Text} from 'react-native-paper';
 import {connect} from 'react-redux';
+import {useIsFocused} from '@react-navigation/native';
 
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import CommonInput from '../../sharedComponents/commonInput';
@@ -11,12 +12,14 @@ import Feather from 'react-native-vector-icons/Feather';
 import MenuLayout from '../../sharedComponents/menu';
 import styles from './style';
 import * as actions from '../../store/actions';
-import {displayResponse, updateObject} from '../../utils';
+import {_retrieveData, updateObject, displayResponse} from '../../utils';
 import ButtonLayout from '../../sharedComponents/button';
 import InsideAuthApi from '../../services/inSideAuth';
 
 const ProfileScreen = (props) => {
   const {colors} = useTheme();
+  const isFocused = useIsFocused();
+  const [image, setImage] = React.useState(null);
   const [data, setData] = React.useState({
     controls: {
       input: {
@@ -62,6 +65,7 @@ const ProfileScreen = (props) => {
     },
   });
 
+
   const onInputChange = (val, type) => {
     let varVal = {};
     varVal = updateObject(data, {
@@ -77,9 +81,9 @@ const ProfileScreen = (props) => {
   };
   const onSearch = () => {
     props.loader(true);
-    
   };
 
+  console.log(props.img)
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -89,7 +93,22 @@ const ProfileScreen = (props) => {
         <Text style={styles.headerText}>Profile</Text>
         <View style={styles.outerBox}>
           <View style={{alignItems: 'center', marginBottom: 30}}>
-            <Avatar.Image size={100} source={require('../../assets/images/user.jpeg')} />
+            <TouchableOpacity
+              onPress={() => props.navigation.navigate('CameraScreen')}>
+              {props.img? (
+                <Image style={{width: 166,
+                  height: 158,}} source={{uri: props.img}} />
+                // <Avatar.Image
+                //   size={100}
+                //   source={{uri: image}}
+                // />
+              ) : (
+                <Avatar.Image
+                  size={100}
+                  source={require('../../assets/images/user.jpeg')}
+                />
+              )}
+            </TouchableOpacity>
           </View>
           <Text style={styles.text_footer}>First Name</Text>
           <View>
@@ -104,8 +123,8 @@ const ProfileScreen = (props) => {
               icons={data.controls.input.icons}
               ele={data.controls.input.elementType}
             />
-           </View>
-          <Text style={[styles.text_footer,{marginTop: 20}]}>Last Name</Text>
+          </View>
+          <Text style={[styles.text_footer, {marginTop: 20}]}>Last Name</Text>
           <View>
             <CommonInput
               placeholder={data.controls.details.elementConfig.placeholder}
@@ -118,8 +137,8 @@ const ProfileScreen = (props) => {
               icons={data.controls.details.icons}
               ele={data.controls.details.elementType}
             />
-           </View>
-          <View style={[styles.buttonInput,{marginTop: 20}]}>
+          </View>
+          <View style={[styles.buttonInput, {marginTop: 20}]}>
             <ButtonLayout onPress={onSearch}>Save</ButtonLayout>
           </View>
           {data.controls.input.errors ? (
@@ -133,13 +152,12 @@ const ProfileScreen = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    loading: state.auth.loading,
-    token: state.auth.access_token,
+    img: state.auth.image
   };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    loader: (val) => dispatch(actions.loading(val))
+    loader: (val) => dispatch(actions.loading(val)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileScreen);

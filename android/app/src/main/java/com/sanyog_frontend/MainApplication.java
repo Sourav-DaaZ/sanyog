@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.rnfs.RNFSPackage;
+import org.reactnative.camera.RNCameraPackage;
 import com.reactnativecommunity.geolocation.GeolocationPackage;
 import com.reactnativecommunity.geolocation.GeolocationPackage;
 import com.reactnativecommunity.viewpager.RNCViewPagerPackage;
@@ -38,19 +40,9 @@ public class MainApplication extends Application implements ReactApplication {
            @SuppressWarnings("UnnecessaryLocalVariable")
            List<ReactPackage> packages = new PackageList(this).getPackages();
            // Packages that cannot be autolinked yet can be added manually here, for example:
-//           packages.add(new MapsPackage());
+          // packages.add(new RNCameraPackage());
            return packages;
          }
-
-        // @Override
-        // protected List<ReactPackage> getPackages() {
-        //   return Arrays.<ReactPackage>asList(
-        //       new MainReactPackage(),
-            // new GeolocationPackage(),
-            // new GeolocationPackage(),
-        //       new MapsPackage()
-        //   );
-        // }
         
 
         @Override

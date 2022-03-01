@@ -200,14 +200,14 @@ const Dashboard = (props) => {
         visable={visible}
         close={() => {
           if (markerSelect) {
-            _storeData('shopMapLocation', markerSelect);
+            props.storeLocation(markerSelect);
           } else {
-            _storeData('shopMapLocation', {
+            props.storeLocation({
               id: 'BS',
               lat: -0.003,
               lon: -0.02,
               location: 'BigShop',
-            });
+            })
           }
           setVisible(false);
         }}
@@ -267,6 +267,12 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => {
   return {
     token: state.auth.access_token,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    storeLocation: (val) => dispatch(actions.storeLocation(val)),
   };
 };
 

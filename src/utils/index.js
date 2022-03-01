@@ -64,6 +64,7 @@ export const displayResponse = (msg, type) => {
 
 export const _storeData = async (key, value) => {
   try {
+    // displayResponse(JSON.stringify(value));
     await AsyncStorage.setItem(key, JSON.stringify(value));
   } catch (error) {
     displayResponse(error);
@@ -72,7 +73,8 @@ export const _storeData = async (key, value) => {
 
 export const _retrieveData = async (key) => {
   try {
-    return AsyncStorage.getItem(key)
+    // displayResponse(await (AsyncStorage.getItem(key)));
+    return await AsyncStorage.getItem(key);
   } catch (error) {
     displayResponse(error);
   }
