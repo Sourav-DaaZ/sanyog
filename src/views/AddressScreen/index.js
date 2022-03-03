@@ -24,7 +24,7 @@ const AddressScreen = (props) => {
           text: 'Address',
           placeholder: 'Enter Your Full Address',
         },
-        value: '',
+        value: props.address?props.address:'',
         validation: {
           required: true,
           isEmail: true,
@@ -36,27 +36,7 @@ const AddressScreen = (props) => {
           <FontAwesome name="home" color="#05375a" size={20} />,
           <Feather name="check-circle" color="green" size={20} />,
         ],
-      },
-      date: {
-        elementType: 'input',
-        elementConfig: {
-          type: 'date',
-          text: 'expiry',
-          placeholder: 'Expiry time',
-        },
-        value: '',
-        validation: {
-          required: true,
-          isEmail: true,
-        },
-        valid: false,
-        errors: '',
-        className: [],
-        icons: [
-          <FontAwesome name="calendar-o" color="#05375a" size={20} />,
-          <Feather name="check-circle" color="green" size={20} />,
-        ],
-      },
+      }
     },
   });
 
@@ -75,7 +55,8 @@ const AddressScreen = (props) => {
   };
   const onSearch = () => {
     props.loader(true);
-    
+    props.addressUpdate(data.controls.card.value);
+    props.navigation.goBack();
   };
 
   return (
@@ -115,11 +96,13 @@ const mapStateToProps = (state) => {
   return {
     loading: state.auth.loading,
     token: state.auth.access_token,
+    address: state.auth.address,
   };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    loader: (val) => dispatch(actions.loading(val))
+    loader: (val) => dispatch(actions.loading(val)),
+    addressUpdate: (val) => dispatch(actions.addressUpdate(val)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(AddressScreen);

@@ -1,6 +1,12 @@
 import {View} from 'native-base';
 import * as React from 'react';
-import {Alert, ScrollView, TouchableOpacity, Keyboard, Image} from 'react-native';
+import {
+  Alert,
+  ScrollView,
+  TouchableOpacity,
+  Keyboard,
+  Image,
+} from 'react-native';
 import {Avatar, useTheme, Text} from 'react-native-paper';
 import {connect} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
@@ -29,7 +35,7 @@ const ProfileScreen = (props) => {
           text: 'First Name',
           placeholder: 'Enter First Name',
         },
-        value: '',
+        value: props.name?.fname?props.name.fname:'',
         validation: {
           required: true,
           isEmail: true,
@@ -49,7 +55,7 @@ const ProfileScreen = (props) => {
           text: 'Last Name',
           placeholder: 'Enter Last Name',
         },
-        value: '',
+        value: props.name?.lname?props.name.lname:'',
         validation: {
           required: true,
           isEmail: true,
@@ -64,7 +70,6 @@ const ProfileScreen = (props) => {
       },
     },
   });
-
 
   const onInputChange = (val, type) => {
     let varVal = {};
@@ -81,9 +86,15 @@ const ProfileScreen = (props) => {
   };
   const onSearch = () => {
     props.loader(true);
+    const data1 = {
+      fname: data.controls.input.value,
+      lname: data.controls.details.value,
+    };
+    props.nameUpdate(data1);
+    props.navigation.goBack();
   };
 
-  console.log(props.img)
+  console.log(props.img);
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -95,14 +106,16 @@ const ProfileScreen = (props) => {
           <View style={{alignItems: 'center', marginBottom: 30}}>
             <TouchableOpacity
               onPress={() => props.navigation.navigate('CameraScreen')}>
-              {props.img? (
-                <Image style={{width: 166,
-                  height: 158,}} source={{uri: props.img}} />
+              {props.img ? (
+                <Image
+                  style={{width: 166, height: 158}}
+                  source={{uri: props.img}}
+                />
+              ) : (
                 // <Avatar.Image
                 //   size={100}
                 //   source={{uri: image}}
                 // />
-              ) : (
                 <Avatar.Image
                   size={100}
                   source={require('../../assets/images/user.jpeg')}
@@ -152,12 +165,14 @@ const ProfileScreen = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    img: state.auth.image
+    img: state.auth.image,
+    name: state.auth.name,
   };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
     loader: (val) => dispatch(actions.loading(val)),
+    nameUpdate: (val) => dispatch(actions.nameUpdate(val)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileScreen);

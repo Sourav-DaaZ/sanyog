@@ -69,3 +69,17 @@ export const nameUpdate = (data) => {
     };
 };
 
+export const costUpdate = (data) => {
+    return {
+        type: actionTypes.COST,
+        data: data
+    };
+};
+
+export const placeOrderUpdate = (data) => {
+    return {
+        type: actionTypes.HISTORY,
+        data: data
+    };
+};
+

@@ -10,6 +10,8 @@ export const ADDRESS = 'ADDRESS';
 export const ORDER = 'ORDER';
 export const PAYMENT = 'PAYMENT';
 export const STORE_LOCATION = 'STORE_LOCATION';
+export const COST = 'COST';
+export const HISTORY = 'HISTORY';
 
 export const REFRESH_TOKEN_UPDATE = 'REFRESH_TOKEN_UPDATE';
 export const ACCESS_TOKEN_UPDATE = 'ACCESS_TOKEN_UPDATE';

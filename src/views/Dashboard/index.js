@@ -2,6 +2,7 @@ import React, {useRef} from 'react';
 import {StyleSheet, View, Alert, TouchableOpacityBase} from 'react-native';
 import {Button, useTheme, Text} from 'react-native-paper';
 import {connect} from 'react-redux';
+import * as actions from '../../store/actions';
 
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
@@ -15,30 +16,34 @@ const Dashboard = (props) => {
   const {colors} = useTheme();
   const mapRef = useRef(null);
   const [visible, setVisible] = React.useState(false);
-  const [reports, setReports] = React.useState([
+  const [reports, setReports] = React.useState(props.route.params?.data? [props.route.params?.data] :[
     {
       id: 'BB',
       lat: 0.002,
       lon: 0.01,
       location: 'BigBazar',
+      distance: 5
     },
     {
       id: 'Tz',
       lat: 0.04,
       lon: 0.03,
       location: 'Trendz',
+      distance: 7
     },
     {
       id: 'S',
       lat: -0.03,
       lon: 0.03,
       location: 'Shopify',
+      distance: 13
     },
     {
       id: 'BS',
       lat: -0.003,
       lon: -0.02,
       location: 'BigShop',
+      distance: 15
     },
   ]);
   const [marker, setMarker] = React.useState({
@@ -47,7 +52,7 @@ const Dashboard = (props) => {
     latitudeDelta: 0.001,
     longitudeDelta: 0.001,
   });
-  const [markerSelect, setMarkerSelect] = React.useState(null);
+  const [markerSelect, setMarkerSelect] = React.useState(props.route.params?.data? [props.route.params?.data] :null);
   const [data, setData] = React.useState({
     controls: {
       pin: {
@@ -168,9 +173,9 @@ const Dashboard = (props) => {
         <Button
           onPress={() => {
             if (markerSelect) {
-              _storeData('shopMapLocation', markerSelect);
+              props.storeLocation(markerSelect);
             }
-            markerSelect
+            markerSelect && !props.route.params?.data
               ? props.navigation.navigate('LandingScreen')
               : currentLocation();
           }}
@@ -180,11 +185,21 @@ const Dashboard = (props) => {
             backgroundColor: colors.mainColor,
           }}
           color={colors.backgroundColor}>
-          {markerSelect ? 'Continue' : 'Current Location'}
+          {markerSelect && !props.route.params?.data ? 'Continue' : 'Current Location'}
         </Button>
         <Text style={{width: '100%', textAlign: 'center', padding: 10}}>
           OR
         </Text>
+        {props.route.params?.data?<Button
+          onPress={() => props.navigation.goBack()}
+          style={{
+            width: '100%',
+            textAlign: 'center',
+            backgroundColor: colors.mainColor,
+          }}
+          color={colors.backgroundColor}>
+          Go Back
+        </Button>:
         <Button
           onPress={() => setVisible(true)}
           style={{
@@ -194,7 +209,7 @@ const Dashboard = (props) => {
           }}
           color={colors.backgroundColor}>
           Enter Pin code
-        </Button>
+        </Button>}
       </View>
       <ModalLayout
         visable={visible}
@@ -202,12 +217,7 @@ const Dashboard = (props) => {
           if (markerSelect) {
             props.storeLocation(markerSelect);
           } else {
-            props.storeLocation({
-              id: 'BS',
-              lat: -0.003,
-              lon: -0.02,
-              location: 'BigShop',
-            })
+            props.storeLocation(reports[1]);
           }
           setVisible(false);
         }}
@@ -276,4 +286,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, null)(Dashboard);
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

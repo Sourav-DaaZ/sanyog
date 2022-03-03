@@ -24,7 +24,7 @@ const PaymentScreen = (props) => {
           text: 'Card Number',
           placeholder: 'Enter Your Card Number',
         },
-        value: '',
+        value: props.payment?.num?props.payment.num:'',
         validation: {
           required: true,
           isEmail: true,
@@ -44,7 +44,7 @@ const PaymentScreen = (props) => {
           text: 'expiry',
           placeholder: 'Expiry time',
         },
-        value: '',
+        value: props.payment?.date?props.payment.date:'',
         validation: {
           required: true,
           isEmail: true,
@@ -75,7 +75,12 @@ const PaymentScreen = (props) => {
   };
   const onSearch = () => {
     props.loader(true);
-    
+    const data1 = {
+      num: data.controls.card.value,
+      date: data.controls.date.value
+    }
+    props.paymentUpdate(data1);
+    props.navigation.goBack();
   };
 
   return (
@@ -128,11 +133,13 @@ const mapStateToProps = (state) => {
   return {
     loading: state.auth.loading,
     token: state.auth.access_token,
+    payment: state.auth.payment,
   };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    loader: (val) => dispatch(actions.loading(val))
+    loader: (val) => dispatch(actions.loading(val)),
+    paymentUpdate: (val) => dispatch(actions.paymentUpdate(val)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(PaymentScreen);

@@ -6,11 +6,13 @@ const initialState = {
   refresh_token: null,
   loading: false,
   image: null,
-  store_location: {},
+  store_location: null,
+  cost: 0,
   name: '',
-  address: '',
+  address: null,
   order: [],
-  payment: {}
+  cart: {},
+  payment: null,
 };
 
 const loading = (state, action) => {
@@ -38,31 +40,46 @@ const imageUpdate = (state, action) => {
 };
 const nameUpdate = (state, action) => {
   return updateObject(state, {
-    name: action.data
+    name: action.data,
   });
 };
 const addressUpdate = (state, action) => {
   return updateObject(state, {
-    address: action.data
+    address: action.data,
   });
 };
 
 const orderUpdate = (state, action) => {
-  const data = [...state.order, ...action.data];
+  
   return updateObject(state, {
-    order: data
+    cart: action.data
+  });
+};
+const placeOrderUpdate = (state, action) => {
+  let data = state.order;
+  data.push(action.data);
+  return updateObject(state, {
+    order: data,
   });
 };
 
 const paymentUpdate = (state, action) => {
   return updateObject(state, {
-    payment: action.data
+    payment: action.data,
   });
 };
 
 const storeLocation = (state, action) => {
+  console.log(action.data)
   return updateObject(state, {
     store_location: action.data,
+  });
+};
+
+const costUpdate = (state, action) => {
+  console.log(action.data)
+  return updateObject(state, {
+    cost: action.data,
   });
 };
 
@@ -88,6 +105,10 @@ const reducer = (state = initialState, action = {}) => {
       return orderUpdate(state, action);
     case actionTypes.PAYMENT:
       return paymentUpdate(state, action);
+    case actionTypes.COST:
+      return costUpdate(state, action);
+    case actionTypes.HISTORY:
+      return placeOrderUpdate(state, action);
     default:
       return state;
   }

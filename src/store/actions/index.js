@@ -7,5 +7,7 @@ export {
    addressUpdate,
    paymentUpdate,
    orderUpdate,
-   nameUpdate
+   nameUpdate,
+   costUpdate,
+   placeOrderUpdate
 } from './auth';

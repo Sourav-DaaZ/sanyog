@@ -1,9 +1,18 @@
 import {View} from 'native-base';
 import * as React from 'react';
 import {Alert, ScrollView, TouchableOpacity} from 'react-native';
-import {useTheme, Card, Title, Paragraph, Button} from 'react-native-paper';
+import {
+  useTheme,
+  Card,
+  Title,
+  Paragraph,
+  Button,
+  Text,
+  Badge,
+} from 'react-native-paper';
 import {connect} from 'react-redux';
 import {displayResponse, _retrieveData, _storeData} from '../../utils';
+import { useIsFocused } from '@react-navigation/native';
 
 import * as actions from '../../store/actions';
 import defaultValue from '../../constants/defaultValue';
@@ -12,21 +21,152 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 
 const SingleShopScreen = (props) => {
   const {colors} = useTheme();
+  const isFocused = useIsFocused();
+  const [cart, setCart] = React.useState(props.cart);
+  const [count, setCount] = React.useState(0);
+  const [data, setData] = React.useState(defaultValue.items);
+  const [loader, setLoader] = React.useState(false);
 
   const onPressFunc = () => {
     props.loader(true);
   };
 
-  React.useEffect(()=>{
-    const valData = JSON.stringify(_retrieveData('shopMapLocation'));
-    displayResponse(valData)
-    if(valData === null){
-      props.navigation.navigate('MapScreen')
+  React.useEffect(() => {
+    console.log(props.store_location)
+    if (props.store_location === null) {
+      props.navigation.navigate('MapScreen');
     }
-  },[])
+  }, []);
+  React.useEffect(() => {
+    console.log(props.store_location)
+    if (props.store_location === null) {
+      props.navigation.navigate('MapScreen');
+    }
+    setCart(props.cart)
+    setLoader(true)
+    setTimeout(() => {
+      setLoader(false);
+    }, 500);
+  }, [isFocused]);
 
-  return (
-    <View>
+  React.useEffect(() => {
+    let count1 = 0;
+    data.map((x, index) =>
+      cart[x.id] ? (count1 = count1 + cart[x.id]) : null,
+    );
+    setCount(count1);
+  }, [loader]);
+
+  const plusItem = (id) => {
+    setLoader(true);
+    let data1 = cart;
+
+    if (data1[id] === undefined || data1[id] === 0) {
+      data1[id] = 1;
+    } else {
+      data1[id] = data1[id] + 1;
+    }
+    setCart(data1);
+    props.orderUpdate(data1);
+    setTimeout(() => {
+      setLoader(false);
+    }, 500);
+  };
+  const minusItem = (id) => {
+    setLoader(true);
+    let data1 = cart;
+
+    if (data1[id] !== undefined || data1[id] !== 0) {
+      data1[id] = data1[id] - 1;
+    }
+    setCart(data1);
+    props.orderUpdate(data1);
+    setTimeout(() => {
+      setLoader(false);
+    }, 500);
+  };
+
+
+  const HtmlContent = data.map((x, index) => (
+    <View key={x.title} style={{marginVertical: 10}}>
+      <Card>
+        <Card.Content>
+          <Title>{x.title}</Title>
+          <Paragraph>Price: ${x.price}</Paragraph>
+          {cart[x.id] ? (
+            <View
+              style={{
+                position: 'absolute',
+                right: 30,
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                top: 30,
+              }}>
+              <Button
+                style={{
+                  backgroundColor: colors.mainColor,
+                  with: 5,
+                }}
+                onPress={() => {
+                  minusItem(x.id, index);
+                }}
+                color={colors.backgroundColor}>
+                dec
+              </Button>
+              <Text
+                style={{
+                  margin: 10,
+                }}>
+                {cart[x.id]}
+              </Text>
+              <Button
+                style={{
+                  backgroundColor: colors.mainColor,
+                  with: 5,
+                }}
+                onPress={() => {
+                  plusItem(x.id, index);
+                }}
+                color={colors.backgroundColor}>
+                INC
+              </Button>
+            </View>
+          ) : (
+            <Button
+              style={{
+                position: 'absolute',
+                right: 30,
+                top: 30,
+                backgroundColor: colors.mainColor,
+                with: 40,
+              }}
+              onPress={() => {
+                plusItem(x.id, index);
+              }}
+              color={colors.backgroundColor}>
+              Buy
+            </Button>
+          )}
+        </Card.Content>
+      </Card>
+    </View>
+  ));
+
+  const countData = (
+    <React.Fragment>
+      <Badge
+        style={{
+          marginLeft: 15,
+          position: 'absolute',
+          right: 20,
+          top: -50,
+          color: 'black',
+          backgroundColor: 'white',
+          zIndex: 9999,
+        }}>
+        {count}
+      </Badge>
       <FontAwesome
         name="shopping-cart"
         color={colors.backgroundColor}
@@ -34,12 +174,17 @@ const SingleShopScreen = (props) => {
           marginLeft: 15,
           position: 'absolute',
           right: 20,
-          top: -40,
+          top: -30,
           zIndex: 9999,
         }}
         size={20}
         onPress={() => props.navigation.navigate('ShopScreen')}
       />
+    </React.Fragment>
+  );
+  return (
+    <View>
+     {loader? countData : countData}
       <ScrollView
         showsVerticalScrollIndicator={true}
         showsHorizontalScrollIndicator={true}>
@@ -50,27 +195,7 @@ const SingleShopScreen = (props) => {
             onPress={() => props.navigation.navigate('MapScreen')}>
             Set Location
           </ButtonLayout>
-          {defaultValue.items.map((x) => (
-            <View key={x.title} style={{marginVertical: 10}}>
-              <Card>
-                <Card.Content>
-                  <Title>{x.title}</Title>
-                  <Paragraph>Price: ${x.price}</Paragraph>
-                  <Button
-                    style={{
-                      position: 'absolute',
-                      right: 30,
-                      top: 30,
-                      backgroundColor: colors.mainColor,
-                      with: 40,
-                    }}
-                    color={colors.backgroundColor}>
-                    Buy
-                  </Button>
-                </Card.Content>
-              </Card>
-            </View>
-          ))}
+          {!loader ? HtmlContent : HtmlContent}
         </View>
       </ScrollView>
     </View>
@@ -81,11 +206,14 @@ const mapStateToProps = (state) => {
   return {
     loading: state.auth.loading,
     token: state.auth.access_token,
+    cart: state.auth.cart,
+    store_location: state.auth.store_location,
   };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
     loader: (val) => dispatch(actions.loading(val)),
+    orderUpdate: (val) => dispatch(actions.orderUpdate(val)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(SingleShopScreen);

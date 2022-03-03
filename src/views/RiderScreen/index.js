@@ -12,6 +12,17 @@ import ButtonLayout from '../../sharedComponents/button';
 const RiderScreen = (props) => {
   const {colors} = useTheme();
 
+  const onOrder = () => {
+    const data = {
+      cart: props.cart,
+      cost: props.cost + props.store_location?.distance * 5,
+      location: props.store_location.location,
+    };
+    console.log(data);
+    props.placeOrderUpdate(data);
+    props.orderUpdate({});
+    props.navigation.navigate('LandingScreen');
+  };
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -26,11 +37,11 @@ const RiderScreen = (props) => {
               justifyContent: 'space-between',
               flexWrap: 'wrap',
               alignItems: 'center',
-              marginBottom: 20
+              marginBottom: 20,
             }}>
             <Text style={styles.text_footer}>Destination:</Text>
             <View>
-              <Text></Text>
+              <Text>{props.address}</Text>
             </View>
           </View>
           <View
@@ -39,11 +50,11 @@ const RiderScreen = (props) => {
               justifyContent: 'space-between',
               flexWrap: 'wrap',
               alignItems: 'center',
-              marginBottom: 20
+              marginBottom: 20,
             }}>
             <Text style={styles.text_footer}>Distance</Text>
             <View>
-              <Text></Text>
+              <Text>{props.store_location?.distance} KM.</Text>
             </View>
           </View>
           <View
@@ -52,28 +63,60 @@ const RiderScreen = (props) => {
               justifyContent: 'space-between',
               flexWrap: 'wrap',
               alignItems: 'center',
-              marginBottom: 20
+              marginBottom: 20,
             }}>
             <Text style={styles.text_footer}>Estimated Price: </Text>
             <View>
-              <Text></Text>
-              <Text style={{marginBottom: 10, borderBottomColor: 'lightgray', borderBottomWidth: 1, paddingBottom: 10}}></Text>
-              <Text></Text>
+              <Text>{props.cost}</Text>
+              <Text
+                style={{
+                  marginBottom: 10,
+                  borderBottomColor: 'lightgray',
+                  borderBottomWidth: 1,
+                  paddingBottom: 10,
+                }}>
+                {props.store_location?.distance * 5}
+              </Text>
+              <Text>{props.cost + props.store_location?.distance * 5}</Text>
             </View>
           </View>
-          <View style={[styles.buttonInput, {marginTop: 10}]}>
-            <ButtonLayout outline>View in Map</ButtonLayout>
-          </View>
+          {props.address?.length > 1 &&
+          props.payment?.num?.length > 1 &&
+          props.store_location?.distance ? (
+            <View style={[styles.buttonInput, {marginTop: 10}]}>
+              <ButtonLayout
+                outline
+                onPress={() =>
+                  props.navigation.navigate('MapScreen', {
+                    data: props.store_location,
+                  })
+                }>
+                View in Map
+              </ButtonLayout>
+            </View>
+          ) : null}
           <View style={[styles.buttonInput, {marginTop: 20}]}>
-            <ButtonLayout onPress={()=>{
-              Alert.alert(
-                "success",
-                "Order place Successfully!",
-                [
-                  { text: "OK", onPress: () => props.navigation.navigate('LandingScreen') }
-                ]
-              );
-            }}>Place Order</ButtonLayout>
+            {props.address?.length > 1 &&
+            props.payment?.num?.length > 1 &&
+            props.store_location?.distance ? (
+              <ButtonLayout
+                onPress={() => {
+                  Alert.alert('success', 'Order place Successfully!', [
+                    {
+                      text: 'OK',
+                      onPress: onOrder,
+                    },
+                  ]);
+                }}
+              >
+                Place Order
+              </ButtonLayout>
+            ) : (
+              <Text style={{textAlign: 'center'}}>
+                Address OR Card details OR Shop Details Missing! please selec
+                from menu.
+              </Text>
+            )}
           </View>
         </View>
       </View>
@@ -85,11 +128,18 @@ const mapStateToProps = (state) => {
   return {
     loading: state.auth.loading,
     token: state.auth.access_token,
+    address: state.auth.address,
+    payment: state.auth.payment,
+    cart: state.auth.cart,
+    cost: state.auth.cost,
+    store_location: state.auth.store_location,
   };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
     loader: (val) => dispatch(actions.loading(val)),
+    placeOrderUpdate: (val) => dispatch(actions.placeOrderUpdate(val)),
+    orderUpdate: (val) => dispatch(actions.orderUpdate(val)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(RiderScreen);

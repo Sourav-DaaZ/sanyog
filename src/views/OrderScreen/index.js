@@ -14,25 +14,22 @@ const OrderScreen = (props) => {
     props.loader(true);
     
   };
-
+  console.log(props.order);
   return (
     <ScrollView
       showsVerticalScrollIndicator={true}
       showsHorizontalScrollIndicator={true}
     >
       <View style={{flex: 1, justifyContent: 'center'}}>
-      <Card.Title
-          title="Milk, Curd..."
-          subtitle="Big Bazar"
-          style={{borderBottomColor: 'lightgray', borderBottomWidth: 1}}
-          right={() => <Text style={{marginRight: 20}}>$120</Text>}
-        />
+      {props.order?.map((x) => (
+        console.log(Object.keys(x.cart).length - 1),
         <Card.Title
-          title="Milk, Curd..."
-          subtitle="Big Bazar"
-          style={{borderBottomColor: 'lightgray', borderBottomWidth: 1}}
-          right={() => <Text style={{marginRight: 20}}>$120</Text>}
-        />
+        title={Object.keys(x.cart).length - 1 > 0?(Object.keys(x.cart)[0].toString() + ' and other ' + (Object.keys(x.cart).length - 1).toString() + 'items'):Object.keys(x.cart)[0].toString()}
+        subtitle={x.location}
+        style={{borderBottomColor: 'lightgray', borderBottomWidth: 1}}
+        right={() => <Text style={{marginRight: 20}}>${x.cost}</Text>}
+      />
+      ))}
       </View>
     </ScrollView>
   );
@@ -41,7 +38,8 @@ const OrderScreen = (props) => {
 const mapStateToProps = (state) => {
   return {
     loading: state.auth.loading,
-    token: state.auth.access_token,
+    cart: state.auth.cart,
+    order: state.auth.order
   };
 };
 const mapDispatchToProps = (dispatch) => {
