@@ -356,24 +356,24 @@ const RegisterScreen = (props) => {
 
   return (
     <LoginLayout headerText="Register" layout={true}>
-        <View style={styles.text_footer}>
-          <Text style={styles.text_footer}>
-            {data.controls.name.elementConfig.text}
-          </Text>
-          <CommonInput
-            placeholder={data.controls.name.elementConfig.placeholder}
-            onInputChange={onInputChange}
-            onSubmit={() => Keyboard.dismiss()}
-            value={data.controls.name.value}
-            type={data.controls.name.elementConfig.type}
-            isValid={data.controls.name.valid}
-            icons={data.controls.name.icons}
-            ele={data.controls.name.elementType}
-          />
-          {data.controls.name.errors ? (
-            <Text style={{color: 'red'}}>{data.controls.name.errors}</Text>
-          ) : null}
-        </View>
+      <View style={styles.text_footer}>
+        <Text style={styles.text_footer}>
+          {data.controls.name.elementConfig.text}
+        </Text>
+        <CommonInput
+          placeholder={data.controls.name.elementConfig.placeholder}
+          onInputChange={onInputChange}
+          onSubmit={() => Keyboard.dismiss()}
+          value={data.controls.name.value}
+          type={data.controls.name.elementConfig.type}
+          isValid={data.controls.name.valid}
+          icons={data.controls.name.icons}
+          ele={data.controls.name.elementType}
+        />
+        {data.controls.name.errors ? (
+          <Text style={{color: 'red'}}>{data.controls.name.errors}</Text>
+        ) : null}
+      </View>
 
       <Text style={[styles.text_footer, {marginTop: 15}]}>
         {data.controls.jobTitle.elementConfig.text}
@@ -424,7 +424,7 @@ const RegisterScreen = (props) => {
       {data.controls.password.errors ? (
         <Text style={{color: 'red'}}>{data.controls.password.errors}</Text>
       ) : null}
-      
+
       <Text style={[styles.text_footer, {marginTop: 15}]}>
         {data.controls.adminPassword.elementConfig.text}
       </Text>

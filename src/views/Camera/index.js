@@ -11,7 +11,7 @@ const PendingView = () => (
   <View
     style={{
       flex: 1,
-      backgroundColor: 'lightgreen',
+      backgroundColor: 'transparent',
       justifyContent: 'center',
       alignItems: 'center',
     }}

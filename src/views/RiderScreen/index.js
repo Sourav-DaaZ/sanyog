@@ -13,14 +13,21 @@ const RiderScreen = (props) => {
   const {colors} = useTheme();
 
   const onOrder = () => {
+    let dCart = {};
+    for (const property in props.cart) {
+      if(props.cart[property] > 0){
+        dCart[property] = property;
+      }
+    }
     const data = {
-      cart: props.cart,
-      cost: props.cost + props.store_location?.distance * 5,
+      cart: dCart,
+      cost: props.cost + props.store_location?.distance * 1,
       location: props.store_location.location,
     };
     console.log(data);
     props.placeOrderUpdate(data);
     props.orderUpdate({});
+    props.costUpdate(0);
     props.navigation.navigate('LandingScreen');
   };
   return (
@@ -73,11 +80,12 @@ const RiderScreen = (props) => {
                   marginBottom: 10,
                   borderBottomColor: 'lightgray',
                   borderBottomWidth: 1,
+                  textAlign: 'right',
                   paddingBottom: 10,
                 }}>
-                {props.store_location?.distance * 5}
+                {props.store_location?.distance * 1}
               </Text>
-              <Text>{props.cost + props.store_location?.distance * 5}</Text>
+              <Text>{props.cost + props.store_location?.distance * 1}</Text>
             </View>
           </View>
           {props.address?.length > 1 &&
@@ -140,6 +148,7 @@ const mapDispatchToProps = (dispatch) => {
     loader: (val) => dispatch(actions.loading(val)),
     placeOrderUpdate: (val) => dispatch(actions.placeOrderUpdate(val)),
     orderUpdate: (val) => dispatch(actions.orderUpdate(val)),
+    costUpdate: (val) => dispatch(actions.costUpdate(val)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(RiderScreen);

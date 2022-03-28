@@ -28,6 +28,23 @@ const InsideAuthRoutes = () => {
   const AllComponent = (props) => (
     <RootStack.Navigator>
       <RootStack.Screen
+        name="MapScreen"
+        component={Dashboard}
+        options={() => ({
+          headerTitle: () => (
+            <Text style={[styles.headerText, {color: colors.backgroundColor}]}>
+              Current Address
+            </Text>
+          ),
+          headerStyle: {
+            backgroundColor: colors.mainColor,
+            borderBottomWidth: 0,
+            shadowOpacity: 0,
+          },
+          headerLeft: () => null,
+        })}
+      />
+      <RootStack.Screen
         name="LandingScreen"
         component={SingleShopScreen}
         options={() => ({
@@ -49,29 +66,10 @@ const InsideAuthRoutes = () => {
               size={30}
               onPress={() => props.navigation.openDrawer()}
             />
-          )
+          ),
         })}
       />
       <RootStack.Screen
-        name="MapScreen"
-        component={Dashboard}
-        options={() => ({
-          headerTitle: () => (
-            <Text style={[styles.headerText, {color: colors.backgroundColor}]}>
-              Current Address
-            </Text>
-          ),
-          headerStyle: {
-            backgroundColor: colors.mainColor,
-            borderBottomWidth: 0,
-            shadowOpacity: 0,
-          },
-          headerLeft: () => (
-            null
-          )
-        })}
-      />
-    <RootStack.Screen
         name="ShopScreen"
         component={ShopScreen}
         options={() => ({
@@ -93,10 +91,10 @@ const InsideAuthRoutes = () => {
               size={30}
               onPress={() => props.navigation.goBack()}
             />
-          )
+          ),
         })}
       />
-    <RootStack.Screen
+      <RootStack.Screen
         name="CameraScreen"
         component={Camera}
         options={() => ({
@@ -118,10 +116,10 @@ const InsideAuthRoutes = () => {
               size={30}
               onPress={() => props.navigation.goBack()}
             />
-          )
+          ),
         })}
       />
-    <RootStack.Screen
+      <RootStack.Screen
         name="RiderScreen"
         component={RiderScreen}
         options={() => ({
@@ -141,12 +139,12 @@ const InsideAuthRoutes = () => {
               color={colors.backgroundColor}
               style={{marginLeft: 15}}
               size={30}
-              onPress={() => props.navigation.goBack()}
+              onPress={() => props.navigation.navigate('ShopScreen')}
             />
-          )
+          ),
         })}
       />
-    <RootStack.Screen
+      <RootStack.Screen
         name="ProfileScreen"
         component={ProfileScreen}
         options={() => ({
@@ -168,10 +166,10 @@ const InsideAuthRoutes = () => {
               size={30}
               onPress={() => props.navigation.goBack()}
             />
-          )
+          ),
         })}
       />
-    <RootStack.Screen
+      <RootStack.Screen
         name="PaymentScreen"
         component={PaymentScreen}
         options={() => ({
@@ -193,10 +191,10 @@ const InsideAuthRoutes = () => {
               size={30}
               onPress={() => props.navigation.goBack()}
             />
-          )
+          ),
         })}
       />
-    <RootStack.Screen
+      <RootStack.Screen
         name="OrderScreen"
         component={OrderScreen}
         options={() => ({
@@ -218,10 +216,10 @@ const InsideAuthRoutes = () => {
               size={30}
               onPress={() => props.navigation.goBack()}
             />
-          )
+          ),
         })}
       />
-    <RootStack.Screen
+      <RootStack.Screen
         name="AddressScreen"
         component={AddressScreen}
         options={() => ({
@@ -243,7 +241,7 @@ const InsideAuthRoutes = () => {
               size={30}
               onPress={() => props.navigation.goBack()}
             />
-          )
+          ),
         })}
       />
     </RootStack.Navigator>

@@ -12,7 +12,7 @@ import {
 } from 'react-native-paper';
 import {connect} from 'react-redux';
 import {displayResponse, _retrieveData, _storeData} from '../../utils';
-import { useIsFocused } from '@react-navigation/native';
+import {useIsFocused} from '@react-navigation/native';
 
 import * as actions from '../../store/actions';
 import defaultValue from '../../constants/defaultValue';
@@ -32,18 +32,11 @@ const SingleShopScreen = (props) => {
   };
 
   React.useEffect(() => {
-    console.log(props.store_location)
     if (props.store_location === null) {
       props.navigation.navigate('MapScreen');
     }
-  }, []);
-  React.useEffect(() => {
-    console.log(props.store_location)
-    if (props.store_location === null) {
-      props.navigation.navigate('MapScreen');
-    }
-    setCart(props.cart)
-    setLoader(true)
+    setCart(props.cart);
+    setLoader(true);
     setTimeout(() => {
       setLoader(false);
     }, 500);
@@ -57,35 +50,41 @@ const SingleShopScreen = (props) => {
     setCount(count1);
   }, [loader]);
 
-  const plusItem = (id) => {
+  const plusItem = (id, index, price) => {
     setLoader(true);
+    let cost = props.cost;
     let data1 = cart;
 
     if (data1[id] === undefined || data1[id] === 0) {
       data1[id] = 1;
+      cost = cost + price;
     } else {
       data1[id] = data1[id] + 1;
+      cost = cost + price;
     }
     setCart(data1);
     props.orderUpdate(data1);
+    props.costUpdate(cost);
     setTimeout(() => {
       setLoader(false);
     }, 500);
   };
-  const minusItem = (id) => {
+  const minusItem = (id, index, price) => {
     setLoader(true);
     let data1 = cart;
+    let cost = props.cost;
 
     if (data1[id] !== undefined || data1[id] !== 0) {
       data1[id] = data1[id] - 1;
+      cost = cost - price;
     }
     setCart(data1);
     props.orderUpdate(data1);
+    props.costUpdate(cost);
     setTimeout(() => {
       setLoader(false);
     }, 500);
   };
-
 
   const HtmlContent = data.map((x, index) => (
     <View key={x.title} style={{marginVertical: 10}}>
@@ -109,7 +108,7 @@ const SingleShopScreen = (props) => {
                   with: 5,
                 }}
                 onPress={() => {
-                  minusItem(x.id, index);
+                  minusItem(x.id, index, x.price);
                 }}
                 color={colors.backgroundColor}>
                 dec
@@ -126,7 +125,7 @@ const SingleShopScreen = (props) => {
                   with: 5,
                 }}
                 onPress={() => {
-                  plusItem(x.id, index);
+                  plusItem(x.id, index, x.price);
                 }}
                 color={colors.backgroundColor}>
                 INC
@@ -142,7 +141,7 @@ const SingleShopScreen = (props) => {
                 with: 40,
               }}
               onPress={() => {
-                plusItem(x.id, index);
+                plusItem(x.id, index, x.price);
               }}
               color={colors.backgroundColor}>
               Buy
@@ -164,7 +163,8 @@ const SingleShopScreen = (props) => {
           color: 'black',
           backgroundColor: 'white',
           zIndex: 9999,
-        }}>
+        }}
+        onPress={() => props.navigation.navigate('ShopScreen')}>
         {count}
       </Badge>
       <FontAwesome
@@ -184,7 +184,7 @@ const SingleShopScreen = (props) => {
   );
   return (
     <View>
-     {loader? countData : countData}
+      {loader ? countData : countData}
       <ScrollView
         showsVerticalScrollIndicator={true}
         showsHorizontalScrollIndicator={true}>
@@ -207,6 +207,7 @@ const mapStateToProps = (state) => {
     loading: state.auth.loading,
     token: state.auth.access_token,
     cart: state.auth.cart,
+    cost: state.auth.cost,
     store_location: state.auth.store_location,
   };
 };
@@ -214,6 +215,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     loader: (val) => dispatch(actions.loading(val)),
     orderUpdate: (val) => dispatch(actions.orderUpdate(val)),
+    costUpdate: (val) => dispatch(actions.costUpdate(val)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(SingleShopScreen);

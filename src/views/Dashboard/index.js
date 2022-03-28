@@ -10,49 +10,56 @@ import ModalLayout from '../../sharedComponents/modal';
 import CommonInput from '../../sharedComponents/commonInput';
 import {updateObject, _storeData} from '../../utils';
 import MapViewDirections from 'react-native-maps-directions';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import InsideAuth from '../../services/inSideAuth';
 
 const Dashboard = (props) => {
   const {colors} = useTheme();
   const mapRef = useRef(null);
   const [visible, setVisible] = React.useState(false);
-  const [reports, setReports] = React.useState(props.route.params?.data? [props.route.params?.data] :[
-    {
-      id: 'BB',
-      lat: 0.002,
-      lon: 0.01,
-      location: 'BigBazar',
-      distance: 5
-    },
-    {
-      id: 'Tz',
-      lat: 0.04,
-      lon: 0.03,
-      location: 'Trendz',
-      distance: 7
-    },
-    {
-      id: 'S',
-      lat: -0.03,
-      lon: 0.03,
-      location: 'Shopify',
-      distance: 13
-    },
-    {
-      id: 'BS',
-      lat: -0.003,
-      lon: -0.02,
-      location: 'BigShop',
-      distance: 15
-    },
-  ]);
+  const [reports, setReports] = React.useState(
+    props.route.params?.data
+      ? [props.route.params?.data]
+      : [
+          {
+            id: 'BB',
+            lat: 0.002,
+            lon: 0.01,
+            location: 'BigBazar',
+            distance: 5,
+          },
+          {
+            id: 'Tz',
+            lat: 0.04,
+            lon: 0.03,
+            location: 'Trendz',
+            distance: 7,
+          },
+          {
+            id: 'S',
+            lat: -0.03,
+            lon: 0.03,
+            location: 'Shopify',
+            distance: 13,
+          },
+          {
+            id: 'BS',
+            lat: -0.003,
+            lon: -0.02,
+            location: 'BigShop',
+            distance: 15,
+          },
+        ],
+  );
   const [marker, setMarker] = React.useState({
     latitude: 10,
     longitude: 10,
     latitudeDelta: 0.001,
     longitudeDelta: 0.001,
   });
-  const [markerSelect, setMarkerSelect] = React.useState(props.route.params?.data? [props.route.params?.data] :null);
+  const [selectMarker, setSelectMarker] = React.useState(null);
+  const [markerSelect, setMarkerSelect] = React.useState(
+    props.route.params?.data ? props.route.params.data : null,
+  );
   const [data, setData] = React.useState({
     controls: {
       pin: {
@@ -117,6 +124,42 @@ const Dashboard = (props) => {
     setMarkerSelect(x);
   };
 
+  const onPinSubmit = () => {
+    setVisible(false);
+    InsideAuth()
+      .geoApi({
+        address: data.controls.pin.value,
+        code: 'AIzaSyDQgiKMf2-NZrXY0fFGhLvhqVOMmtYNq0s',
+      })
+      .then((x) => {
+        if (x.results) {
+          mapRef.current.animateToRegion({
+            latitude: x.results[0].geometry.location.lat,
+            longitude: x.results[0].geometry.location.lng,
+            latitudeDelta: 0.08,
+            longitudeDelta: 0.08,
+          });
+        } else {
+          Alert.alert('error', 'No Data Available', [
+            {
+              text: 'OKkk',
+            },
+          ]);
+        }
+      })
+      .catch((e) => {
+        Alert.alert('error', "Something wents wrong", [
+          {
+            text: 'OK',
+          },
+        ]);
+      });
+  };
+
+  const onPressMap = (cord) => {
+    setMarkerSelect(null);
+    setSelectMarker(cord);
+  }
   return (
     <View style={styles.MainContainer}>
       <MapView
@@ -130,20 +173,36 @@ const Dashboard = (props) => {
         showsMyLocationButton={true}
         showsCompass={false}
         showsTraffic={false}
-        toolbarEnabled={true}>
+        toolbarEnabled={true}
+        onPress={(e)=>onPressMap(e.nativeEvent.coordinate)}>
         {markerSelect ? (
           <MapViewDirections
             origin={{
-              latitude: marker.latitude,
-              longitude: marker.longitude,
+              latitude: selectMarker ? selectMarker.latitude : marker.latitude,
+              longitude: selectMarker
+                ? selectMarker.longitude
+                : marker.longitude,
             }}
             destination={{
-              latitude: marker.latitude + markerSelect.lat,
-              longitude: marker.longitude + markerSelect.lon,
+              latitude: selectMarker
+                ? selectMarker.latitude + markerSelect.lat
+                : marker.latitude + markerSelect.lat,
+              longitude: selectMarker
+                ? selectMarker.longitude + markerSelect.lon
+                : marker.longitude + markerSelect.lon,
             }}
             apikey={'AIzaSyDQgiKMf2-NZrXY0fFGhLvhqVOMmtYNq0s'} // insert your API Key here
             strokeWidth={2}
             strokeColor="#111111"
+          />
+        ) : null}
+        {selectMarker ? (
+          <MapView.Marker
+            coordinate={{
+              latitude: selectMarker.latitude,
+              longitude: selectMarker.longitude,
+            }}
+            title={'Selected Location'}
           />
         ) : null}
         {reports.map((report) => (
@@ -151,8 +210,12 @@ const Dashboard = (props) => {
             key={report.id}
             onPress={() => OnShopPress(report)}
             coordinate={{
-              latitude: marker.latitude + report.lat,
-              longitude: marker.longitude + report.lon,
+              latitude: selectMarker
+                ? selectMarker.latitude + report.lat
+                : marker.latitude + report.lat,
+              longitude: selectMarker
+                ? selectMarker.longitude + report.lon
+                : marker.longitude + report.lon,
             }}
             title={report.location}>
             <View style={styles.circle}>
@@ -185,31 +248,36 @@ const Dashboard = (props) => {
             backgroundColor: colors.mainColor,
           }}
           color={colors.backgroundColor}>
-          {markerSelect && !props.route.params?.data ? 'Continue' : 'Current Location'}
+          {markerSelect && !props.route.params?.data
+            ? 'Continue'
+            : 'Current Location'}
         </Button>
         <Text style={{width: '100%', textAlign: 'center', padding: 10}}>
           OR
         </Text>
-        {props.route.params?.data?<Button
-          onPress={() => props.navigation.goBack()}
-          style={{
-            width: '100%',
-            textAlign: 'center',
-            backgroundColor: colors.mainColor,
-          }}
-          color={colors.backgroundColor}>
-          Go Back
-        </Button>:
-        <Button
-          onPress={() => setVisible(true)}
-          style={{
-            width: '100%',
-            textAlign: 'center',
-            backgroundColor: colors.mainColor,
-          }}
-          color={colors.backgroundColor}>
-          Enter Pin code
-        </Button>}
+        {props.route.params?.data ? (
+          <Button
+            onPress={() => props.navigation.navigate('RiderScreen')}
+            style={{
+              width: '100%',
+              textAlign: 'center',
+              backgroundColor: colors.mainColor,
+            }}
+            color={colors.backgroundColor}>
+            Go Back
+          </Button>
+        ) : (
+          <Button
+            onPress={() => setVisible(true)}
+            style={{
+              width: '100%',
+              textAlign: 'center',
+              backgroundColor: colors.mainColor,
+            }}
+            color={colors.backgroundColor}>
+            Enter Pin code
+          </Button>
+        )}
       </View>
       <ModalLayout
         visable={visible}
@@ -222,7 +290,7 @@ const Dashboard = (props) => {
           setVisible(false);
         }}
         title="Enter Your pin code"
-        onPress={() => props.navigation.navigate('LandingScreen')}
+        onPress={onPinSubmit}
         btnTxt="submit">
         <CommonInput
           placeholder={data.controls.pin.elementConfig.placeholder}
@@ -234,7 +302,7 @@ const Dashboard = (props) => {
           validation={data.controls.pin.validation}
           icons={data.controls.pin.icons}
           ele={data.controls.pin.elementType}
-          keyNum={true}
+          keyNum={false}
         />
       </ModalLayout>
     </View>

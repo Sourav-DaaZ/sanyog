@@ -21,9 +21,9 @@ const OrderScreen = (props) => {
       showsHorizontalScrollIndicator={true}
     >
       <View style={{flex: 1, justifyContent: 'center'}}>
-      {props.order?.map((x) => (
-        console.log(Object.keys(x.cart).length - 1),
+      {props.order?.map((x, index) => (
         <Card.Title
+        key={index}
         title={Object.keys(x.cart).length - 1 > 0?(Object.keys(x.cart)[0].toString() + ' and other ' + (Object.keys(x.cart).length - 1).toString() + 'items'):Object.keys(x.cart)[0].toString()}
         subtitle={x.location}
         style={{borderBottomColor: 'lightgray', borderBottomWidth: 1}}
