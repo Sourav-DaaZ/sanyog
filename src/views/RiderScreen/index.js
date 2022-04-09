@@ -109,7 +109,7 @@ const RiderScreen = (props) => {
             props.store_location?.distance ? (
               <ButtonLayout
                 onPress={() => {
-                  Alert.alert('success', 'Order place Successfully!', [
+                  Alert.alert('success', 'Order Placed Successfully!', [
                     {
                       text: 'OK',
                       onPress: onOrder,
@@ -121,8 +121,7 @@ const RiderScreen = (props) => {
               </ButtonLayout>
             ) : (
               <Text style={{textAlign: 'center'}}>
-                Address OR Card details OR Shop Details Missing! please selec
-                from menu.
+                Address OR Card details OR Shop Details Missing!
               </Text>
             )}
           </View>

@@ -31,7 +31,7 @@ const ShopScreen = (props) => {
     props.loader(true);
   };
 
-  const plusItem = (id) => {
+  const plusItem = (id, index, price) => {
     setLoader(true);
     let data1 = cart;
     let cost = props.cost;
@@ -50,7 +50,7 @@ const ShopScreen = (props) => {
       setLoader(false);
     }, 500);
   };
-  const minusItem = (id,index,price) => {
+  const minusItem = (id, index, price) => {
     setLoader(true);
     let data1 = cart;
     let cost = props.cost;
